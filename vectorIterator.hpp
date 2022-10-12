@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 14:50:41 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/11 18:07:27 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/12 17:24:31 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,32 +17,34 @@
 # include "iteratorTraits.hpp"
 
 namespace ft {
-	template <typename Iterator>
-	class vectorIterator : public ft::iterator<ft::random_access_iterator_tag, Iterator>
+	template <class T>
+	class vectorIterator : public ft::iterator<ft::random_access_iterator_tag, T>
 	{
 
 		public:
-			// typedef Iterator iterator_type;
-			typedef typename ft::iterator_traits<Iterator>::value_type			value_type;
-			typedef typename ft::iterator_traits<Iterator>::difference_type		difference_type;
-			typedef typename ft::iterator_traits<Iterator>::pointer				pointer;
-			typedef typename ft::iterator_traits<Iterator>::reference			reference;
-			typedef typename ft::iterator_traits<Iterator>::iterator_category	iterator_category;
+			typedef T				value_type;
+			typedef std::ptrdiff_t	difference_type;
+			typedef T*				pointer;
+			typedef T&				reference;
+			typedef typename ft::iterator<ft::random_access_iterator_tag, T>::iterator_category	iterator_category;
 
 		protected:
-			Iterator	_value;
+			pointer	_value;
 
 		public:
 			vectorIterator(void) : _value() {}
-			// vectorIterator(reference value) : _value(&value) {}
-			// vectorIterator(pointer value) : _value(value) {}
-			explicit vectorIterator(const Iterator &i) : _value(i) {}
+			vectorIterator(pointer value) : _value(value) {}
 			vectorIterator(vectorIterator const &src) : _value(src._value) {}
 			~vectorIterator(void) {}
 
 			vectorIterator &operator=(vectorIterator const &rhs)
 			{
 				_value = rhs._value;
+				return *this;
+			}
+			vectorIterator	&operator=(pointer rhs)
+			{
+				_value = rhs;
 				return *this;
 			}
 			reference operator*() const
@@ -61,9 +63,9 @@ namespace ft {
 			bool operator<=(const vectorIterator& rhs) const	{ return (rhs._value >= this->_value); }
 			bool operator>=(const vectorIterator& rhs) const	{ return (rhs._value <= this->_value); }
 
-			vectorIterator & operator[](unsigned int i)
+			vectorIterator & operator[](unsigned int i) const
 			{
-				this->_value[i];
+				return this->_value[i];
 			}
 			vectorIterator &operator+=(int n)
 			{
@@ -79,10 +81,12 @@ namespace ft {
 			{
 				return vectorIterator(_value + n);
 			}
-			vectorIterator operator-(int n)
+			vectorIterator operator-(difference_type n) const
 			{
 				return vectorIterator(_value - n);
 			}
+			difference_type				operator-(const vectorIterator& rhs) const
+			{ return (_value - rhs._value); }
 			vectorIterator &operator++(void)
 			{
 				this->_value += 1;
