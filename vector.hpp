@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 14:47:39 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/12 18:37:46 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/13 18:21:26 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <memory>
 # include <iostream>
 # include "vectorIterator.hpp"
+# include "reverseIterator.hpp"
 
 namespace ft{
 
@@ -25,14 +26,18 @@ class vector
 	public:
 		typedef T 									value_type;
 		typedef Allocator 							allocator_type;
-		typedef value_type&							reference;
-		typedef const value_type&					const_reference;
-		typedef value_type*					 		pointer;
-		typedef const value_type* 				 	const_pointer;
-		typedef ft::vectorIterator<value_type> 		iterator;
-		typedef ft::vectorIterator<value_type> 	const_iterator;
-		// typedef std::reverse_iterator<iterator> reverse_iterator;
-		// typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+		// typedef value_type&							reference;
+		// typedef const value_type&					const_reference;
+		// typedef value_type*					 		pointer;
+		// typedef const value_type* 				 	const_pointer;
+		typedef typename Allocator::reference  		reference;
+		typedef typename Allocator::const_reference 	const_reference;
+		typedef typename Allocator::pointer 		pointer;
+		typedef typename Allocator::const_pointer 	const_pointer;
+		typedef ft::vectorIterator<pointer> 		iterator;
+		typedef ft::vectorIterator<const_pointer> 	const_iterator;
+		typedef ft::reverse_iterator<iterator> 		reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 		typedef std::size_t 						size_type;
 		typedef std::ptrdiff_t 						difference_type;
 
@@ -57,7 +62,7 @@ class vector
 			this->_size = n;
 			this->_capacity = n;
 			this->_alloc = alloc;
-			this->_arr = this->_alloc.allocate(n);
+			this->_arr = _alloc.allocate(n);
 			for (size_t i = 0; i < n; i++)
 				this->_alloc.construct(&this->_arr[i], val);
 		}
@@ -66,8 +71,11 @@ class vector
 		// vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
 		// {
 		// 	this->_alloc = alloc;
-		// 	this->_size = last - first;
-		// 	this->_capacity = last - first;
+		// 	InputIterator tmp = first;
+		// 	while (tmp != last)
+		// 		tmp++;
+		// 	this->_size = tmp;
+		// 	this->_capacity = tmp;
 		// 	this->_arr = this->_alloc(this->_capacity);
 		// 	for (; first != last; first++)
 		// 		push_back(*first);
@@ -140,6 +148,26 @@ class vector
 		{
 			return const_iterator(_arr + _size);
 		}
+
+		reverse_iterator rbegin(void)
+		{
+			return reverse_iterator(begin());
+		}
+
+		reverse_iterator rend(void)
+		{
+			return reverse_iterator(end());
+		}
+
+
+		const_reverse_iterator rbegin() const
+		{
+			return const_reverse_iterator(end());
+		}
+		const_reverse_iterator rend() const
+		{
+			return const_reverse_iterator(begin());
+		}
 		//CAPACITY
 		size_type size() const
 		{
@@ -168,10 +196,10 @@ class vector
 
 		bool empty() const
 		{
-			if (&this->_arr[0] != NULL)
-				return false;
-			else
+			if (begin() == end())
 				return true;
+			else
+				return false;
 		}
 
 		void reserve(size_type n)
@@ -207,20 +235,18 @@ class vector
 			size_type pos = position - begin();
 
 			if (_capacity == 0)
+			{
 				reserve(1);
+				_capacity++;
+			}
 			if (_size + 1 > _capacity)
 				reserve(_capacity * 2);
 			if (_size > 0)
 			{
 				this->_alloc.construct(&_arr[_size], _arr[_size - 1]);
 				for (size_type i = this->_size - 1; i > pos; i--)
-				{
 					_arr[i] = _arr[i - 1];
-					// this->_alloc.construct(&_arr[i + 1], _arr[i]);
-					// this->_alloc.destroy(&_arr[i]);
-				}
 				_arr[pos] = x;
-				// this->_alloc.construct(&_arr[pos], x);
 			}
 			else
 				_alloc.construct(&_arr[0], x);
@@ -236,13 +262,11 @@ class vector
 				return ;
 			if (_size + n > _capacity)
 				reserve(_capacity + n);
-			for (size_type i = _size - 1; i < _size + n - 1; ++i)
-			{
+			for (size_type i = _size - 1; i < _size + n; i++)
 				_alloc.construct(&_arr[i + 1], _arr[i]);
-			}
 			_size += n;
-			for (size_type i = _size - n; i >= pos + n; i--)
-				_arr[i] = _arr[i - n];
+			// for (size_type i = _size - n; i > pos + n; --i)
+			// 	_arr[i] = _arr[i - n];
 			for (; n > 0; n--)
 				_arr[pos + n - 1] = x;
 		}
@@ -250,20 +274,34 @@ class vector
 		template <class InputIterator>
 		void insert(iterator position, InputIterator first, InputIterator last)
 		{
-			//pour avoir la diff (connaitre n )entre deux iterator => faire une boucle for avec un tmp = first qui parcours jusuqi au last
-			// if (_size + n > _capacity)
-			// 	reserve(_capacity + n);
-			//alouer de la mem avec construct de 0 de la fin jusquai taille de la diff
-			//la size augmente donc de tmp
-			//commencer par decaler les valeurs en allant a la fin du nouveau tableau et collant tant que tmp la fin de lancier
-			//mettre les valeur dans l'arr a partir de la position en collant *first
-			//si la size etait egale a 0 > commencer au debut
+			InputIterator tmp = first;
+			size_type n = 0;
+			size_type pos = position - begin();
+			while (tmp++ != last)
+				n++;
+			if (_size + n > _capacity)
+				reserve(_capacity + n);
+			for (size_type i = 0; i < n; i++)
+				_alloc.construct(&_arr[_size + i], _arr[_size - 1]);
+			for (; last != first; last--)
+			{
+				_arr[pos + n - 1] = *last;
+				n--;
+			}
+			if (_size == 0)
+			{
+				while (first++ != last)
+					_alloc.construct(&_arr[0], *first);
+			}
+			_size += n;
 		}
 
 		iterator erase(iterator position)
 		{
 			size_type pos = position - begin();
 
+			if (pos + 1 >= _size)
+				return end();
 			this->_alloc.destroy(&_arr[pos]);
 			this->_alloc.construct(&_arr[pos], _arr[pos + 1]);
 			for (size_type i = pos + 1; i < _size - 1; i++)
@@ -277,8 +315,8 @@ class vector
 		{
 			while (first != last)
 			{
-				erase(last);
-				last--;
+				erase(--last);
+				// last--;
 			}
 			return (last);
 		}
@@ -302,14 +340,14 @@ class vector
 		}
 		const_reference at(size_type n) const
 		{
-			// if (n > _size)
-			// 	return 0;
+			if (n >= _size)
+				throw std::out_of_range("vector : out_of_range");
 			return this->_arr[n];
 		}
 		reference at(size_type n)
 		{
-			// if (n > _size)
-			// 	return 0;
+			if (n >= _size)
+				throw std::out_of_range("vector : out_of_range");
 			return this->_arr[n];
 		}
 		reference front()
