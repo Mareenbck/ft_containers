@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 15:28:33 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/13 18:39:54 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/14 14:27:20 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,11 +147,10 @@ reverse_iterator<Iter>	operator+( typename reverse_iterator<Iter>::difference_ty
 	return(reverse_iterator<Iter>(it.base() - n));
 }
 
-template< class Iterator >
-typename reverse_iterator<Iterator>::difference_type	operator-( const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs )
-{
-	return (rhs.base() - lhs.base());
-}
+template< typename lIter, typename rIter>
+	typename reverse_iterator<lIter>::difference_type operator-(const reverse_iterator<lIter> &left, const reverse_iterator<rIter> &right) {
+		return right.base() - left.base();
+	}
 
 
 }

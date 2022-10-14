@@ -6,12 +6,14 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 13:53:24 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/13 13:54:51 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/14 14:13:19 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ENABLE_IF_HPP
 # define ENABLE_IF_HPP
+
+namespace ft {
 
 	template<bool Condition, typename T = void>
 	struct enable_if
@@ -23,5 +25,7 @@
 	{
 		typedef T type;
 	};
+}
+
 
 #endif

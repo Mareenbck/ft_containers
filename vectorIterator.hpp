@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 14:50:41 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/13 18:38:00 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/14 14:31:52 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,10 +132,10 @@ namespace ft {
 			bool operator>=(const vectorIterator& rhs) const	{ return (rhs._value <= this->_value); }
 	};
 
-	template<typename L, typename R>
-	bool operator==(const vectorIterator<L> &left, const vectorIterator<R> &right) {
-		return left.base() == right.base();
-	}
+	template <typename L, typename R>
+		bool operator==(const vectorIterator<L> &left, const vectorIterator<R> &right) {
+			return left.base() == right.base();
+		}
 
 	// // template<typename Iter>
 	// // 	bool operator==(const vectorIterator<Iter> &left, const vectorIterator<Iter> &right) {
@@ -149,13 +149,13 @@ namespace ft {
 
 	template<typename L, typename R>
 		bool operator<(const vectorIterator<L> &left, const vectorIterator<R> &right) {
-			return left.base() < right.base();
+			return (left.base() < right.base());
 		}
 
-	// // template<typename Iter>
-	// // 	bool operator<(const vectorIterator<Iter> &left, const vectorIterator<Iter> &right) {
-	// // 	return left.base() < right.base();
-	// // }
+	// template<typename Iter>
+	// 	bool operator<(const vectorIterator<Iter> &left, const vectorIterator<Iter> &right) {
+	// 	return (left.base() < right.base());
+	// }
 
 	template<typename L, typename R>
 		bool operator>(const vectorIterator<L> &left, const vectorIterator<R> &right) {
@@ -195,7 +195,7 @@ namespace ft {
 
 	template< typename L, typename R>
 		typename vectorIterator<L>::difference_type operator-(const vectorIterator<L> &left, const vectorIterator<R> &right) {
-			return left.base() - right.base();
+			return (left.base() - right.base());
 		}
 
 

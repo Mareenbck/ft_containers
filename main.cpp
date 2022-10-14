@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 17:54:19 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/13 11:39:52 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/14 17:27:28 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,52 @@ void ft_check_erase(void)
 
 }
 
+void ft_check_insert()
+{
+	ft::vector<int> myvector (3,100);
+	ft::vector<int>::iterator it;
+	ft::vector<int>::iterator ite = myvector.end();
+
+	it = myvector.begin();
+	for (; it != ite; it++)
+		std::cout << " " << *it;
+	std::cout << std::endl;
+
+	myvector.insert( myvector.begin() , 200 );
+	it = myvector.begin();
+	for (; it != myvector.end(); it++)
+		std::cout << " " << *it;
+	std::cout << std::endl;
+
+	myvector.insert(myvector.begin(),2,300);
+	it = myvector.begin();
+	for (; it != myvector.end(); it++)
+		std::cout << " " << *it;
+	std::cout << std::endl;
+
+  // "it" no longer valid, get a new one:
+	it = myvector.begin();
+
+	ft::vector<int> anothervector (2,400);
+	myvector.insert (it+2,anothervector.begin(),anothervector.end());
+	it = myvector.begin();
+	for (; it != myvector.end(); it++)
+		std::cout << " " << *it;
+	std::cout << std::endl;
+
+	int myarray [] = { 501,502,503 };
+	myvector.insert (myvector.begin(), myarray, myarray+3);
+
+	std::cout << "myvector contains:";
+	for (it=myvector.begin(); it<myvector.end(); it++)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+}
+
 int main(void)
 {
-	ft_check_erase();
+	// ft_check_erase();
+	ft_check_insert();
 	// ft::vector<int> first;
 	// ft::vector<int> second(5,100);
 	// ft::vector<int> third(10,50);
