@@ -121,56 +121,104 @@ void ft_check_insert()
 	std::cout << '\n';
 }
 
+void ft_reserve(void)
+{
+	ft::vector<int>::size_type sz;
+
+	ft::vector<int> foo;
+	sz = foo.capacity();
+	std::cout << "making foo grow:\n";
+	for (int i = 0; i < 100; ++i)
+	{
+		foo.push_back(i);
+		if (sz != foo.capacity())
+		{
+			sz = foo.capacity();
+			std::cout << "capacity changed: " << sz << '\n';
+		}
+	}
+
+	ft::vector<int> bar;
+	sz = bar.capacity();
+	bar.reserve(100); // this is the only difference with foo above
+	std::cout << "making bar grow:\n";
+	for (int i = 0; i < 100; ++i)
+	{
+		bar.push_back(i);
+		if (sz != bar.capacity())
+		{
+			sz = bar.capacity();
+			std::cout << "capacity changed: " << sz << '\n';
+		}
+	}
+}
+
+void ft_check_pushback()
+{
+	ft::vector<int> myvector;
+	// int myint;
+
+	// std::cout << "Please enter some integers (enter 0 to end):\n";
+	myvector.push_back(1);
+	myvector.push_back(2);
+	myvector.push_back(3);
+	myvector.pop_back();
+
+	std::cout << "myvector stores " << int(myvector.size()) << " numbers.\n";
+	for (int i = 0; i < int(myvector.size()); i++)
+		std::cout << myvector[i] << " ";
+	std::cout << std::endl;
+}
 int main(void)
 {
 	// ft_check_erase();
 	ft_check_insert();
-	// ft::vector<int> first;
-	// ft::vector<int> second(5,100);
-	// ft::vector<int> third(10,50);
-	// ft::vector<int> fourth(second);
+	// ft_reserve();
+	// ft_check_pushback();
+		// ft::vector<int> first;
+		// ft::vector<int> second(5,100);
+		// ft::vector<int> third(10,50);
+		// ft::vector<int> fourth(second);
 
-	// ft::vector<int>::iterator it1;
-	// it1 = second.begin();
-	// it1 = second.insert(it1, 200);
-	// std::cout << "second contains:";
-	// for (it1 = second.begin(); it1 < second.end(); it1++)
-	// 	std::cout << ' ' << *it1;
-	// std::cout << '\n';
-	// ft::vector<int>::iterator it3;
-	// it1 = second.begin();
-	// // second.reserve(10);
-	// second.insert(it1 + 1, third.begin() + 1, third.begin() + 4);
-	// std::cout << "second contains:";
-	// for (it1 = second.begin(); it1 < second.end(); it1++)
-	// 	std::cout << ' ' << *it1;
-	// std::cout << '\n';
+		// ft::vector<int>::iterator it1;
+		// it1 = second.begin();
+		// it1 = second.insert(it1, 200);
+		// std::cout << "second contains:";
+		// for (it1 = second.begin(); it1 < second.end(); it1++)
+		// 	std::cout << ' ' << *it1;
+		// std::cout << '\n';
+		// ft::vector<int>::iterator it3;
+		// it1 = second.begin();
+		// // second.reserve(10);
+		// second.insert(it1 + 1, third.begin() + 1, third.begin() + 4);
+		// std::cout << "second contains:";
+		// for (it1 = second.begin(); it1 < second.end(); it1++)
+		// 	std::cout << ' ' << *it1;
+		// std::cout << '\n';
 
-	// std::cout << "The capcity of third:";
-	// std::cout << third.capacity() << std::endl;
-	// third.reserve(10);
-	// std::cout << "The new capcity of third:";
-	// std::cout << third.capacity() << std::endl;
+		// std::cout << "The capcity of third:";
+		// std::cout << third.capacity() << std::endl;
+		// third.reserve(10);
+		// std::cout << "The new capcity of third:";
+		// std::cout << third.capacity() << std::endl;
 
-	// // std::cout << "The contents of second are:";
-	// // for (ft::vector<int>::iterator it = second.begin(); it != second.end(); ++it)
-	// // 	std::cout << ' ' << *it;
-	// // std::cout << '\n';
-	// std::cout << "The contents of third are:";
-	// for (ft::vector<int>::iterator it = third.begin(); it != third.end(); ++it)
-	// 	std::cout << ' ' << *it;
-	// std::cout << '\n';
-	// third.erase(third.begin(), third.begin()+1);
-	// std::cout << "The contents of third are:";
-	// for (ft::vector<int>::iterator it = third.begin(); it != third.end(); ++it)
-	// 	std::cout << ' ' << *it;
-	// std::cout << '\n';
-	// std::cout << "The contents of fourth are:";
-	// for (ft::vector<int>::iterator it = fourth.begin(); it != fourth.end(); ++it)
-	// 	std::cout << ' ' << *it;
-	// std::cout << '\n';
+		// // std::cout << "The contents of second are:";
+		// // for (ft::vector<int>::iterator it = second.begin(); it != second.end(); ++it)
+		// // 	std::cout << ' ' << *it;
+		// // std::cout << '\n';
+		// std::cout << "The contents of third are:";
+		// for (ft::vector<int>::iterator it = third.begin(); it != third.end(); ++it)
+		// 	std::cout << ' ' << *it;
+		// std::cout << '\n';
+		// third.erase(third.begin(), third.begin()+1);
+		// std::cout << "The contents of third are:";
+		// for (ft::vector<int>::iterator it = third.begin(); it != third.end(); ++it)
+		// 	std::cout << ' ' << *it;
+		// std::cout << '\n';
+		// std::cout << "The contents of fourth are:";
+		// for (ft::vector<int>::iterator it = fourth.begin(); it != fourth.end(); ++it)
+		// 	std::cout << ' ' << *it;
+		// std::cout << '\n';
 
-
-  return 0;
-
+		return 0;
 }

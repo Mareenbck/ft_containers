@@ -108,11 +108,11 @@ class vector
 			return *this;
 		}
 
-		virtual ~vector()
+		~vector()
 		{
-			clear();
-			this->_alloc.deallocate(_arr, this->_capacity);
-			return;
+			for (size_type i = 0; i < size(); i++)
+				_alloc.destroy(&_arr[i]);
+			_alloc.deallocate(_arr, capacity());
 		}
 
 		template <class InputIterator>
@@ -217,17 +217,19 @@ class vector
 
 		void reserve(size_type n)
 		{
-			pointer newArr;
+			T *newArr;
 
-			if (_capacity <= n)
+			if (n <= _capacity)
 				return ;
+			if (n > _alloc.max_size())
+				throw std::length_error("vector::reserve");
 			newArr = _alloc.allocate(n);
-			for (size_type i = 0; i < _size; i++)
+			for (size_type i = 0; i < size(); i++)
 			{
 				_alloc.construct(&newArr[i], _arr[i]);
 				_alloc.destroy(&_arr[i]);
 			}
-			this->_alloc.deallocate(&this->_arr[0], this->_capacity);
+			this->_alloc.deallocate(_arr, capacity());
 			this->_arr = newArr;
 			this->_capacity = n;
 		}
@@ -236,11 +238,12 @@ class vector
 		void push_back(const T& x)
 		{
 			if (_capacity == 0)
-				reserve(0);
+				reserve(1);
 			if (_size + 1 > _capacity)
 				reserve(_capacity * 2);
 			_alloc.construct(&_arr[_size], x);
 			_size++;
+			// _capacity++;
 		}
 
 		void pop_back(void)
@@ -283,7 +286,7 @@ class vector
 				reserve(_capacity + n + 1);
 			for (size_type i = _size -1; i < _size + n; i++)
 			{
-				std::cout << "arr " << _arr[i] << std::endl;
+				// std::cout << "arr " << _arr[i] << std::endl;
 				_alloc.construct(&_arr[i + 1], _arr[i]);
 			}
 			// for (size_type i = _size + n; i > 0; i--)
@@ -303,28 +306,18 @@ class vector
 		template <class InputIterator>
 			void insert(iterator position, InputIterator first, InputIterator last,  typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
 			{
-				std::cout << " COUCOU " << std::endl;
 				InputIterator tmp = first;
-				// size_type n = last - first;
 				size_type n = 0;
 				size_type pos = position - begin();
-
 				while (tmp++ != last)
 					n++;
 				if (_size + n > _capacity)
-					reserve(_capacity + n + 1);
-				if (_size == 0)
-				{
-					while (first++ != last)
-						_alloc.construct(&_arr[0], *first);
-				}
-				for (size_type i = _size - 1; i < (_size + n); ++i)
-				{
-					std::cout << "arr " << _arr[i] << " " << i << std::endl;
+					reserve(_capacity + n);
+				for (size_type i = _size - 1; i < (_size + n); i++)
 					_alloc.construct(&_arr[i + 1], _arr[i]);
-					_arr[i] = _arr[i - 1];
-				}
 				_size += n;
+				// for (size_type i = 0; i < _size; i++)
+					// std::cout << "c" << _arr[i] << std::endl;
 				for (size_type i = _size - n; i >= pos + n; i--)
 					_arr[i] = _arr[i - n];
 				last--;
@@ -334,6 +327,12 @@ class vector
 					n--;
 				}
 				_arr[pos + n - 1] = *last;
+				if (_size == 0)
+				{
+					while (first++ != last)
+						_alloc.construct(&_arr[0], *first);
+				}
+				_size += n;
 				_capacity = _size;
 			}
 
