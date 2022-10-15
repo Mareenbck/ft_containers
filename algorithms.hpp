@@ -1,32 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   enable_if.hpp                                      :+:      :+:    :+:   */
+/*   algorithms.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/13 13:53:24 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/15 16:27:09 by mbascuna         ###   ########.fr       */
+/*   Created: 2022/10/15 16:26:34 by mbascuna          #+#    #+#             */
+/*   Updated: 2022/10/15 16:27:57 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ENABLE_IF_HPP
-# define ENABLE_IF_HPP
+#ifndef ALGORITHMS_HPP
+# define ALGORITHMS_HPP
 
-namespace ft {
+namespace ft{
 
-	template<bool Condition, typename T = void>
-	struct enable_if
+	template <class InputIterator1, class InputIterator2>
+		bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2)
 	{
-	};
-
-	template<typename T>
-	struct enable_if<true, T>
-	{
-		typedef T type;
-	};
+		while (first1!=last1)
+		{
+			if (first2==last2 || *first2<*first1) return false;
+			else if (*first1<*first2) return true;
+			++first1;
+			++first2;
+		}
+		return (first2!=last2);
+	}
 }
-
-
 
 #endif

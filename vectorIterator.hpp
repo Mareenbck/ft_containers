@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 14:50:41 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/14 14:31:52 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/15 16:10:01 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,11 +115,11 @@ namespace ft {
 			// 	_value = rhs._value;
 			// 	return *this;
 			// }
-			// vectorIterator	&operator=(pointer rhs)
-			// {
-			// 	_value = rhs;
-			// 	return *this;
-			// }
+			vectorIterator	&operator=(const vectorIterator &rhs)
+			{
+				_value = rhs._value;
+				return *this;
+			}
 
 
 

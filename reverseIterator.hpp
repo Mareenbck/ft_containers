@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 15:28:33 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/14 14:27:20 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/15 15:08:31 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@ namespace ft {
 		reverse_iterator(void) : _value(iterator_type()) {}
 		explicit reverse_iterator(Iterator value) : _value(value) {}
 		reverse_iterator(reverse_iterator const &src) : _value(src.base()) {}
-		virtual ~reverse_iterator(void) {}
+		~reverse_iterator(void) {}
 
 		template <typename U>
-			reverse_iterator(const reverse_iterator<U>& u)
+			reverse_iterator(const reverse_iterator<U>& u) : _value(u.base())
 			{
-				*this = u;
+				// *this = u;
 			}
 
 		reverse_iterator	&operator=(reverse_iterator const &src)
@@ -61,7 +61,7 @@ namespace ft {
 		pointer operator->() const
 		{
 			iterator_type tmp = _value;
-			return (&(*(--tmp)));
+			return (&(*--tmp));
 		}
 		reverse_iterator& operator++()
 		{
@@ -71,7 +71,7 @@ namespace ft {
 		reverse_iterator operator++(int)
 		{
 			reverse_iterator tmp(*this);
-			(*this)--;
+			++(*this);
 			return tmp;
 		}
 		reverse_iterator& operator--()
@@ -83,7 +83,7 @@ namespace ft {
 		reverse_iterator operator--(int)
 		{
 			reverse_iterator tmp(*this);
-			(*this)++;
+			--(*this);
 			return tmp;
 		}
 		reverse_iterator operator+(difference_type n) const
