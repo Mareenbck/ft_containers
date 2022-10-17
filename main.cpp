@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 17:54:19 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/17 17:40:38 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/17 18:25:09 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -478,16 +478,16 @@ void std_check_erase_bis(void)
 
 int main(void)
 {
-	ft_check_constructor();
-	ft_check_constructor_tester();
-	std_check_constructor();
+	// ft_check_constructor();
+	// ft_check_constructor_tester();
+	// std_check_constructor();
 	// ft_check_erase();
 	// ft_check_erase_bis();
 	// std_check_erase_bis();
 	// ft_check_insert();
 	// ft_reserve();
 	// ft_check_pushback();
-	// ft_check_assign();
+	ft_check_assign();
 	// std_check_comparaison();
 	return 0;
 }

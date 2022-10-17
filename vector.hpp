@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 14:47:39 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/17 18:12:08 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/17 18:37:04 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ class vector
 			allocator_type _alloc;
 
 	public:
-	//CONSTRUCTEURS
+/***************************************CONSTRUCTORS****************************************/
+
 		explicit vector(const allocator_type& alloc = allocator_type())
 		{
 			this->_alloc = alloc;
@@ -132,8 +133,6 @@ class vector
 			size_type i = 0;
 			for (InputIterator it = first; it != last; it++)
 				_alloc.construct(&_arr[i++], *it);
-			_alloc.construct(&_arr[i], *last);
-
 		}
 
 		void assign(size_type n, const T& u)
@@ -149,7 +148,8 @@ class vector
 			return this->_alloc;
 		}
 
-		//ITERATOR
+/***************************************ITERATOR****************************************/
+
 		iterator begin(void)
 		{
 			return iterator(_arr);
@@ -221,7 +221,6 @@ class vector
 
 		void reserve(size_type n)
 		{
-
 			if (n > _alloc.max_size())
 				throw std::length_error("vector::reserve");
 			if (capacity() < n)
@@ -237,7 +236,8 @@ class vector
 			}
 		}
 
-		//MODIFIERS
+/***************************************MODIFIERS**********************************************/
+
 		void push_back(const T& x)
 		{
 			if (size() >= capacity())
@@ -310,7 +310,7 @@ class vector
 			if (_size + n > _capacity)
 			{
 				size_type newSize = _size + n;
-				pointer newArr = _alloc.allocate(size() + n);
+				pointer newArr = _alloc.allocate(newSize);
 				for (; i < pos; i++)
 					_alloc.construct(&newArr[i], _arr[i]);
 				for (size_type j = 0; j < n; j++)
@@ -400,7 +400,8 @@ class vector
 			_size = 0;
 		}
 
-		//ELEMENT ACCESS
+/***************************************ELEMENT ACCESS****************************************/
+
 		reference operator[](size_type n)
 		{
 			return this->_arr[n];
