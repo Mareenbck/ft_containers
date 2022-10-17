@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 17:54:19 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/15 16:40:07 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/17 17:40:38 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -292,6 +292,76 @@ void std_check_constructor (void)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 	std::cout << " size " << vct_copy.size() << std::endl;
+}
+
+void ft_check_constructor_tester(void)
+{
+	ft::vector<int> vct(5);
+	ft::vector<int>::iterator it = vct.begin(), ite = vct.end();
+	std::cout << " ****************** FT ****************** " << std::endl;
+	std::cout << "len: " << (ite - it) << std::endl;
+	for (; it != ite; ++it)
+		*it = (ite - it);
+
+	it = vct.begin();
+	ft::vector<int> vct_range(it, --(--ite));
+	for (int i = 0; it != ite; ++it)
+		*it = ++i * 5;
+
+	it = vct.begin();
+	ft::vector<int> vct_copy(vct);
+	for (int i = 0; it != ite; ++it)
+		*it = ++i * 7;
+	vct_copy.push_back(42);
+	vct_copy.push_back(21);
+
+	std::cout << "\t-- PART ONE --" << std::endl;
+	std::cout << "The contents of VCT are:";
+	for (ft::vector<int>::iterator it = vct.begin(); it != vct.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+	std::cout << " size " << vct.size() << std::endl;
+
+
+	std::cout << "The contents of vct_range are:";
+	for (ft::vector<int>::iterator it = vct_range.begin(); it != vct_range.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+	std::cout << " size " << vct_range.size() << std::endl;
+
+
+	std::cout << "The contents of vct_copy are:";
+	for (ft::vector<int>::iterator it = vct_copy.begin(); it != vct_copy.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+	std::cout << " size " << vct_copy.size() << std::endl;
+
+
+	vct = vct_copy;
+	std::cout << " OLA " << std::endl;
+	vct_copy = vct_range;
+	vct_range.clear();
+
+	std::cout << "\t-- PART TWO --" << std::endl;
+	std::cout << "The contents of VCT are:";
+	for (ft::vector<int>::iterator it = vct.begin(); it != vct.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+	std::cout << " size " << vct.size() << std::endl;
+
+
+	std::cout << "The contents of vct_range are:";
+	for (ft::vector<int>::iterator it = vct_range.begin(); it != vct_range.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+	std::cout << " size " << vct_range.size() << std::endl;
+
+
+	std::cout << "The contents of vct_copy are:";
+	for (ft::vector<int>::iterator it = vct_copy.begin(); it != vct_copy.end(); ++it)
+		std::cout << ' ' << *it;
+	std::cout << '\n';
+	std::cout << " size " << vct_copy.size() << std::endl;
 
 }
 
@@ -408,8 +478,9 @@ void std_check_erase_bis(void)
 
 int main(void)
 {
-	// ft_check_constructor();
-	// std_check_constructor();
+	ft_check_constructor();
+	ft_check_constructor_tester();
+	std_check_constructor();
 	// ft_check_erase();
 	// ft_check_erase_bis();
 	// std_check_erase_bis();
@@ -417,6 +488,6 @@ int main(void)
 	// ft_reserve();
 	// ft_check_pushback();
 	// ft_check_assign();
-	std_check_comparaison();
+	// std_check_comparaison();
 	return 0;
 }
