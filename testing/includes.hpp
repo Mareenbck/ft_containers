@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 10:02:29 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/18 10:04:18 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/19 14:43:05 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 // 	#include "../map.hpp"
 // 	#include "../stack.hpp"
  # include "../includes/containers/vector.hpp"
+ # include "../includes/utils/pair.hpp"
 // # endif
 
 // class Awesome {
@@ -57,6 +58,7 @@
 // };
 
 void	vector_tests(void);
+void 	pair_tests(void);
 // void	stack_tests(void);
 // void	map_tests(void);
 

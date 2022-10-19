@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 14:47:39 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/18 16:58:23 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/19 15:00:34 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include "../utils/algorithms.hpp"
 # include "../utils/is_integral.hpp"
 
-namespace ft{
+namespace ft {
 
 template <class T, class Allocator = std::allocator<T> >
 class vector
@@ -30,7 +30,7 @@ class vector
 		typedef T 									value_type;
 		typedef Allocator 							allocator_type;
 		typedef typename Allocator::reference  		reference;
-		typedef typename Allocator::const_reference 	const_reference;
+		typedef typename Allocator::const_reference const_reference;
 		typedef typename Allocator::pointer 		pointer;
 		typedef typename Allocator::const_pointer 	const_pointer;
 		typedef ft::vectorIterator<pointer> 		iterator;
@@ -46,9 +46,8 @@ class vector
 			value_type *_arr;
 			allocator_type _alloc;
 
-	public:
 /***************************************CONSTRUCTORS****************************************/
-
+	public:
 		explicit vector(const allocator_type& alloc = allocator_type())
 		{
 			this->_alloc = alloc;

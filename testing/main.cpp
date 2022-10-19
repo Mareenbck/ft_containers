@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 17:54:19 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/18 10:04:58 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/19 14:42:51 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int main(void)
 {
-	vector_tests();
+	// vector_tests();
+	pair_tests();
 	return 0;
 }
