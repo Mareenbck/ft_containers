@@ -19,16 +19,17 @@
 # include <stdexcept>
 # include "../iterators/vectorIterator.hpp"
 # include "../iterators/reverseIterator.hpp"
+# include "../utils/pair.hpp"
 
 namespace ft {
 
-template <class Key, class T, class Compare = less<Key>, class Allocator = allocator<pair<const Key, T> > >
+template <class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<ft::pair<Key, T> > >
 class map {
 
 	public:
 		typedef Key 								key_type;
 		typedef T 									mapped_type;
-		typedef ft::pair<const Key, T> 				value_type;
+		typedef ft::pair<Key, T> 					value_type;
 		typedef Compare 							key_compare;
 		typedef Allocator 							allocator_type;
 		typedef typename Allocator::reference		reference;
@@ -42,14 +43,23 @@ class map {
 		typedef std::size_t 						size_type;
 		typedef std::ptrdiff_t 						difference_type;
 
-	class value_compare: public binary_function<value_type,value_type,bool> {
-		friend class map;
+		class value_compare
+		{
 			protected:
-				Compare comp;
-				value_compare(Compare c) : comp(c) {}
+				Compare _comp;
 			public:
-				bool operator()(const value_type& x, const value_type& y) const { return comp(x.first, y.first);
-
+				value_compare() : _comp(Compare()) {}
+				value_compare(Compare c) : _comp(c) {}
+				~value_compare(void) {}
+				value_compare& operator=(const value_compare& rhs)
+				{
+					_comp = rhs._comp;
+					return *this;
+				}
+				//operator pour comparaison seulement des keys
+				bool operator()(const value_type& x, const value_type& y) const { return _comp(x.first, y.first);}
+		};
+		
 	private:
 		key_type	_key;
 		mapped_type	_map;
@@ -71,6 +81,8 @@ class map {
 		~map();
 		map<Key,T,Compare,Allocator>&
 		operator=(const map<Key,T,Compare,Allocator>& x);
+	};
 }
+
 
 #endif

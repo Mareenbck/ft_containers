@@ -27,21 +27,20 @@ namespace ft {
 	template <typename T>
 	struct node
 	{
-		T	value;
-		T*	left;
-		T*	right;
-		T*	parent;
-		t_color color;
+		typedef T 					value_type;
+		typedef value_type&			reference;
+		typedef const value_type&	const_reference;
+		typedef value_type*			pointer;
+		typedef const value_type*	const_pointer;
+		typedef node<value_type>*	node_pointer;
 
-		node() : value(),left(NULL), right(NULL), parent(NULL), color(BLACK) {
-		}
-		node(const T& value) : value(value), left(NULL), right(NULL), parent(NULL), color(RED) {
-		}
+		node(void) : value(),left(NULL), right(NULL), parent(NULL), color(BLACK) {}
+		node(const T& value) : value(value), left(NULL), right(NULL), parent(NULL), color(RED) {}
 		node(const node& src)
 		{
 			*this = src;
 		}
-		~node();
+		~node(void) {}
 
 		node& operator=(const node& rhs)
 		{
@@ -49,47 +48,53 @@ namespace ft {
 			left = rhs.left;
 			right = rhs.right;
 			parent = rhs.parent;
-			color = RED;
+			color = rhs.color;
 			return *this;
 		}
-
+		node_pointer left;
+		node_pointer right;
+		node_pointer parent;
+		t_color color;
+		value_type value;
 	};
 
-	template <class T, class Compare, class Alloc = std::allocator<node<T>>>
+	template <class T, class Compare, class Alloc = std::allocator<node<T> > >
 	class rb_tree
 	{
 		public:
-			typedef node<T>							value_type;
-			typedef	std::allocator<value_type>		allocator;
-			typedef value_type 						&reference;
-			typedef const value_type				&const_reference;
-			typedef node<T>							*pointer_node;
-			typedef node<T>							*const_pointer_node;
-			typedef	iteratorTree<pointer_node>		iterator;
-			typedef	iteratorTree<const_pointer_node> const_iterator;
-			typedef ft::reverse_iterator<iterator>			reverse_iterator;
-			typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
+			typedef T										value_type; //pair
+			// typedef node<T>								value_type;
+			typedef value_type&								reference;
+			typedef const value_type&						const_reference;
+			typedef Compare 								value_compare
+			typedef typename Allocator::template rebind<node<value_type>>::other allocator_type;
 			typedef std::size_t								size_type;
+			typedef typename allocator_type::pointer 		pointer;
+			typedef typename allocator_type::const_pointer 	const_pointer;
+			typedef node<T> 								node;
+			typedef node*									pointer_node;
+			// typedef	iteratorTree<pointer_node>		iterator;
+			// typedef	iteratorTree<const_pointer_node> const_iterator;
+			// typedef ft::reverse_iterator<iterator>			reverse_iterator;
+			// typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 
 		private:
-			allocator		_alloc;
-			Compare			_comp;
-			pointer_node	_root;
-			pointer_node	_head;
+			allocator_type	_alloc;
 			size_type 		_size;
+			value_compare	_comp;
+			pointer_node	_root;
+			pointer_node	_end;
 
 		public:
 			explicit rb_tree(void)
 			{
-				_alloc.construct(_head, value_type());
-				_head = _alloc.allocate(1);
-				_head->parent = _root;
-				_head->left = _head;
-				_head->right = _head;
-				_head->color = RED;
+				_alloc = Alloc();
 				_size = 0;
+				_comp = Compare();
+				_root = NULL;
+				_end = create_node();
 			}
-
+			rb_tree(rb_tree const &rhs) { *this = rhs; }
 			~rb_tree(void)
 			{
 				// clear()
@@ -105,22 +110,40 @@ namespace ft {
 				return *this;
 			}
 
-			iterator begin(void)
+			pointer_node create_node(void)
 			{
-				return iterator(_root);
+				pointer_node n = _alloc.allocate(1);
+				_alloc.construct(n, node());
+				return (n);
 			}
-			const_iterator begin(void) const
+			pointer_node create_node(node p)
 			{
-				return const_iterator(_root);
+				pointer_node n = _alloc.allocate(1);
+				_alloc.construct(n, p);
+				return (n);
 			}
-			iterator end(void)
-			{
-				return iterator(_head);
-			}
-			const_iterator end(void)
-			{
-				return const_iterator(_head);
-			}
+
+			// iterator begin(void)
+			// {
+			// 	return iterator(_root);
+			// }
+			// const_iterator begin(void) const
+			// {
+			// 	return const_iterator(_root);
+			// }
+			// iterator end(void)
+			// {
+			// 	return iterator(_end);
+			// }
+			// const_iterator end(void)
+			// {
+			// 	return const_iterator(_end);
+			// }
+			allocator_type get_allocator(void) const { return (_alloc); }
+			size_type get_size(void) const { return (_size); }
+			pointer_node get_root(void) const { return (_root); }
+			pointer_node get_end(void) const { return (_end); }
+
 			pointer_node get_grand_parent(pointer_node n)
 			{
 				pointer_node p = n->parent;
@@ -144,7 +167,7 @@ namespace ft {
 				pointer_node g =  get_grand_parent(n)
 				if (g == NULL)
 					return NULL; // Pas de grand parent, donc pas d'oncle
-				return frere(p);
+				return get_bro(p);
 			}
 
 			void	left_rotate(pointer_node x)
