@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 11:38:55 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/21 17:12:20 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/24 11:46:33 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,11 @@ namespace ft {
 			color = rhs.color;
 			return *this;
 		}
-		node_pointer left;
-		node_pointer right;
-		node_pointer parent;
-		t_color color;
-		value_type value;
+		node_pointer	left;
+		node_pointer	right;
+		node_pointer	parent;
+		t_color			color;
+		value_type		value;
 	};
 
 	template <class T, class Compare, class Alloc = std::allocator<node<T> > >
@@ -86,6 +86,7 @@ namespace ft {
 			pointer_node	_end;
 
 		public:
+/***************************************CONSTRUCTORS****************************************/
 			explicit rb_tree(void)
 			{
 				_alloc = Alloc();
@@ -94,18 +95,21 @@ namespace ft {
 				_root = NULL;
 				_end = create_node();
 			}
-			rb_tree(rb_tree const &rhs) { *this = rhs; }
+			rb_tree(rb_tree const &rhs)
+			{
+				*this = rhs;
+			}
 			~rb_tree(void)
 			{
-				// clear()
-				_alloc.deallocate(_head, 1);
+				clear(_root);
+				delete_node(_end);
 			}
 
 			rb_tree	&operator=(const rb_tree &rhs)
 			{
 				_comp = rhs._comp;
 				_root = rhs._root;
-				_head = rhs._head;
+				_end = rhs._end;
 				_size = rhs._size;
 				return *this;
 			}
@@ -122,7 +126,11 @@ namespace ft {
 				_alloc.construct(n, p);
 				return (n);
 			}
-
+			void delete_node(pointer_node n)
+			{
+				_alloc.destroy(n);
+				_alloc.deallocate(n, 1);
+			}
 			// iterator begin(void)
 			// {
 			// 	return iterator(_root);
@@ -139,6 +147,7 @@ namespace ft {
 			// {
 			// 	return const_iterator(_end);
 			// }
+
 			allocator_type get_allocator(void) const { return (_alloc); }
 			size_type get_size(void) const { return (_size); }
 			pointer_node get_root(void) const { return (_root); }
@@ -291,6 +300,12 @@ namespace ft {
 					g->color = RED;
 				}
  			}
+			void clear(node_pointer root)
+			{
+				clear(root->left);
+				clear(root->right);
+				delete(root);
+			}
 	};
 }
 
