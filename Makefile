@@ -1,5 +1,5 @@
 NAME	=	ft_containers
-SRCS	=	pair_test.cpp vector_test.cpp main.cpp
+SRCS	=	pair_test.cpp vector_test.cpp map_test.cpp main.cpp
 OBJS	=	$(addprefix $(OBJDIR), ${SRCS:.cpp=.o})
 DEPENDS = 	$(OBJS:.o=.d)
 CXX		=	c++

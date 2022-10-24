@@ -1,59 +1,62 @@
 // /* ************************************************************************** */
 // /*                                                                            */
 // /*                                                        :::      ::::::::   */
-// /*   treeIterator.hpp                                   :+:      :+:    :+:   */
+// /*   constTreeIterator.hpp                              :+:      :+:    :+:   */
 // /*                                                    +:+ +:+         +:+     */
 // /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 // /*                                                +#+#+#+#+#+   +#+           */
-// /*   Created: 2022/10/21 12:11:22 by mbascuna          #+#    #+#             */
-// /*   Updated: 2022/10/24 17:20:03 by mbascuna         ###   ########.fr       */
+// /*   Created: 2022/10/24 13:25:32 by mbascuna          #+#    #+#             */
+// /*   Updated: 2022/10/24 17:12:38 by mbascuna         ###   ########.fr       */
 // /*                                                                            */
 // /* ************************************************************************** */
 
-// #ifndef TREE_ITERATOR_HPP
-// # define TREE_ITERATOR_HPP
+// #ifndef CONSTTREEITERATOR_HPP
+// # define CONSTTREEITERATOR_HPP
 
 // # include "iteratorTraits.hpp"
-// # include "constTreeIterator.hpp"
+// # include "treeIterator.hpp"
 // # include "../utils/rb_tree.hpp"
-// // #include "../iterators/reverseIterator.hpp"
-// // #include "../utils/pair.hpp"
+
 
 // namespace ft {
 
-// 	template <typename T>
-// 	class constIterTree;
-
 // 	template<typename T>
-// 	class iteratorTree
+// 	class constIterTree
 // 	{
 // 		public:
-// 			typedef T							value_type;
-// 			typedef value_type*					pointer;
-// 			typedef value_type&					reference;
+// 			typedef T const						value_type;
+// 			// typedef value_type*					pointer_node;
+// 			// typedef typename T::value_type 		data_type;
+// 			// typedef value_type*					pointer;
+// 			// typedef value_type&					reference;
+// 			typedef const value_type&			reference;
+// 			typedef const value_type*			pointer;
 // 			typedef std::ptrdiff_t				difference_type;
 // 			typedef std::bidirectional_iterator_tag	iterator_category;
 
 // 		private:
-// 			typedef typename ft::Node< value_type >::pointer_node pointer_node;
-// 			// typedef ft::Node<T>* pointer_node;
+// 			typedef typename ft::Node<value_type>::pointer_node	pointer_node;
 // 			pointer_node 						_node;
 
 // 		public:
-// 			iteratorTree(void) : _node(NULL) {}
-// 			iteratorTree(pointer_node n) : _node(n) {}
-// 			iteratorTree(const iteratorTree& src)
-// 			{
-// 				*this = src;
-// 			}
-// 			~iteratorTree(void) {}
+// 			constIterTree(void) : _node(NULL) {}
+// 			constIterTree(pointer_node n) : _node(n) {}
+// 			// constIterTree(const pointer_node& src)
+// 			// {
+// 			// 	*this = src;
+// 			// }
+// 			// constIterTree(const iteratorTree<T>& rhs) : _node(rhs.base()) {}
+// 			constIterTree(const constIterTree& rhs) { *this = rhs; }
+// 			~constIterTree() {}
 
-// 			iteratorTree& operator=(const iteratorTree& rhs)
+// 			constIterTree& operator=(const constIterTree& rhs)
 // 			{
 // 				_node = rhs._node;
 // 				return *this;
 // 			}
 // 			pointer_node base() const { return (_node); }
+// 			bool operator==(const constIterTree& rhs) const	{ return (rhs._node == _node); }
+// 			bool operator!=(const constIterTree& rhs) const	{ return !(rhs._node == _node); }
 
 // 			reference operator*() const
 // 			{
@@ -62,10 +65,9 @@
 
 // 			pointer operator->() const
 // 			{
-// 				// return &_node->value;
-// 				return (&this->operator*());
+// 				return &_node->value;
 // 			}
-// 			iteratorTree &operator++(void)
+// 			constIterTree &operator++(void)
 // 			{
 // 				if (_node->right != NULL)
 // 				{
@@ -86,14 +88,14 @@
 // 				}
 // 				return *this;
 // 			}
-// 			iteratorTree operator++(int)
+// 			constIterTree operator++(int)
 // 			{
-// 				iteratorTree tmp(*this);
+// 				constIterTree tmp(*this);
 // 				++(*this);
 // 				return tmp;
 // 			}
 
-// 			iteratorTree &operator--(void)
+// 			constIterTree &operator--(void)
 // 			{
 // 				// if (_node->color == RED && _node->parent->parent == _node)
 // 					// _node = _node->right;
@@ -116,18 +118,13 @@
 // 				}
 // 				return *this;
 // 			}
-// 			iteratorTree operator--(int)
+// 			constIterTree operator--(int)
 // 			{
-// 				iteratorTree tmp(*this);
+// 				constIterTree tmp(*this);
 // 				--(*this);
 // 				return tmp;
 // 			}
-
-// 			bool operator==(const iteratorTree& rhs) const	{ return (rhs._node == _node); }
-// 			bool operator!=(const iteratorTree& rhs) const	{ return !(rhs._node == _node); }
 // 	};
-
-
 // }
 
 // #endif
