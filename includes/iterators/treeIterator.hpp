@@ -6,23 +6,23 @@
 // /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 // /*                                                +#+#+#+#+#+   +#+           */
 // /*   Created: 2022/10/21 12:11:22 by mbascuna          #+#    #+#             */
-// /*   Updated: 2022/10/24 17:20:03 by mbascuna         ###   ########.fr       */
+// /*   Updated: 2022/10/25 10:57:04 by mbascuna         ###   ########.fr       */
 // /*                                                                            */
 // /* ************************************************************************** */
 
 // #ifndef TREE_ITERATOR_HPP
 // # define TREE_ITERATOR_HPP
 
-// # include "iteratorTraits.hpp"
-// # include "constTreeIterator.hpp"
 // # include "../utils/rb_tree.hpp"
+// # include "iteratorTraits.hpp"
+// // # include "constTreeIterator.hpp"
 // // #include "../iterators/reverseIterator.hpp"
 // // #include "../utils/pair.hpp"
 
 // namespace ft {
 
-// 	template <typename T>
-// 	class constIterTree;
+// 	// template <typename T>
+// 	// class constIterTree;
 
 // 	template<typename T>
 // 	class iteratorTree
@@ -33,16 +33,18 @@
 // 			typedef value_type&					reference;
 // 			typedef std::ptrdiff_t				difference_type;
 // 			typedef std::bidirectional_iterator_tag	iterator_category;
-
-// 		private:
 // 			typedef typename ft::Node< value_type >::pointer_node pointer_node;
 // 			// typedef ft::Node<T>* pointer_node;
 // 			pointer_node 						_node;
+// 			pointer_node 						root;
+// 			pointer_node 						NIL;
+
+// 		private:
 
 // 		public:
 // 			iteratorTree(void) : _node(NULL) {}
 // 			iteratorTree(pointer_node n) : _node(n) {}
-// 			iteratorTree(const iteratorTree& src)
+// 			iteratorTree(const iteratorTree<T>& src)
 // 			{
 // 				*this = src;
 // 			}
@@ -51,6 +53,8 @@
 // 			iteratorTree& operator=(const iteratorTree& rhs)
 // 			{
 // 				_node = rhs._node;
+// 				root = rhs.root;
+// 				NIL = rhs.NIL;
 // 				return *this;
 // 			}
 // 			pointer_node base() const { return (_node); }
