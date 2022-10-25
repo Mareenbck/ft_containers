@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 15:24:11 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/25 16:17:03 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/25 17:34:59 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,97 @@ void ft_check_map_constructor(void)
 	// 	std::cout << it->first << " => " << it->second << '\n';
 }
 
+/********************************ELEMENT ACCESS**********************************/
+
+void ft_check_at(void)
+{
+	ft::map<std::string,int> mymap;
+
+	mymap["alpha"]=0;
+	mymap["beta"]=0;
+	mymap["gamma"]=0;
+
+	mymap.at("alpha") = 10;
+	mymap.at("beta") = 20;
+	mymap.at("gamma") = 30;
+
+	ft::map<std::string,int>::iterator it = mymap.begin();
+
+	for (it=mymap.begin(); it!=mymap.end(); ++it)
+		std::cout << it->first << ": " << it->second << '\n';
+}
+
+
+/********************************OPERATIONS**********************************/
+
+void ft_check_lowerbound(void)
+{
+	ft::map<char,int> mymap;
+	ft::map<char,int>::iterator itlow,itup;
+
+	mymap['a']=20;
+	mymap['b']=40;
+	mymap['c']=60;
+	mymap['d']=80;
+	mymap['e']=100;
+
+	itlow=mymap.lower_bound ('b');  // itlow points to b
+	itup=mymap.upper_bound ('d');   // itup points to e (not d!)
+
+	// mymap.erase(itlow,itup);        // erases [itlow,itup)
+    std::cout << itlow->first << " => " << itlow->second << '\n';
+    std::cout << itup->first << " => " << itup->second << '\n';
+
+  // print content:
+//   for (std::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+    // std::cout << it->first << " => " << it->second << '\n';
+
+}
+
+void ft_check_find(void)
+{
+	ft::map<char,int> mymap;
+	ft::map<char,int>::iterator it;
+
+	mymap['a']=50;
+	mymap['b']=100;
+	mymap['c']=150;
+	mymap['d']=200;
+
+	it = mymap.find('b');
+	// if (it != mymap.end())
+	// 	mymap.erase (it);
+
+  // print content:
+	std::cout << "elements in mymap:" << '\n';
+	std::cout << "a => " << mymap.find('a')->second << '\n';
+	std::cout << "c => " << mymap.find('c')->second << '\n';
+	std::cout << "d => " << mymap.find('d')->second << '\n';
+}
+
+void ft_check_count(void)
+{
+	ft::map<char,int> mymap;
+	char c;
+
+	mymap['a']=101;
+	mymap['c']=202;
+	mymap['f']=303;
+
+	for (c='a'; c<'h'; c++)
+	{
+		std::cout << c;
+		if (mymap.count(c)>0)
+			std::cout << " is an element of mymap.\n";
+		else
+			std::cout << " is not an element of mymap.\n";
+	}
+}
+
 void map_tests(void)
 {
 	/**CONSTRUCTORS**/
-		ft_check_map_constructor();
+		// ft_check_map_constructor();
 		// ft_constructor_tester();
 
 	/**CAPACITY**/
@@ -82,5 +169,11 @@ void map_tests(void)
 	/**MODIFIERS**/
 
 	/**ELEMENT ACCESS**/
+		// ft_check_at();
+
+	/**OPERATIONS*/
+		// ft_check_lowerbound();
+		// ft_check_find();
+		ft_check_count();
 
 }

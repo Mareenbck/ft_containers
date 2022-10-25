@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 11:38:55 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/25 16:15:14 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/25 17:55:15 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -350,7 +350,7 @@ namespace ft {
 				clear();
 			}
 
-		private:
+		// private:
 			rb_tree	&operator=(const rb_tree &rhs)
 			{
 				// _comp = rhs._comp;
@@ -394,7 +394,6 @@ namespace ft {
 			}
 			void delete_node(pointer_node n)
 			{
-				std::cout << " delete " << std::endl;
 				_alloc.destroy(n);
 				_alloc.deallocate(n, 1);
 			}
@@ -403,7 +402,7 @@ namespace ft {
 			size_type get_size(void) const { return (_size); }
 			pointer_node get_root(void) const { return (_root); }
 			pointer_node get_end(void) const { return (_end); }
-
+			size_type max_size() const {return _alloc.max_size();}
 			pointer_node get_grand_parent(pointer_node n)
 			{
 				pointer_node p = n->parent;
@@ -632,19 +631,18 @@ namespace ft {
 			this->_end->parent = max;
 		}
 
-			void clear(pointer_node root)
-			{
-				std::cout << "clear " << std::endl;
-				if (_root == NULL || _root == _end)
-				{
-					this->_size = 0;
-					this->update_end();
-					return;
-				}
-				clear(root->left);
-				clear(root->right);
-				delete_node(root);
-			}
+			// void clear(pointer_node root)
+			// {
+			// 	if (_root == NULL || _root == _end)
+			// 	{
+			// 		this->_size = 0;
+			// 		this->update_end();
+			// 		return;
+			// 	}
+			// 	clear(root->left);
+			// 	clear(root->right);
+			// 	delete_node(root);
+			// }
 
 		/* Renvoie le pointeur vers l'element passe en param ou null */
 		pointer_node search(const_reference val)
@@ -731,7 +729,23 @@ namespace ft {
 				return (n);
 			}
 
+			pointer_node get_min(pointer_node n) const
+			{
+				if (_size == 0)
+					return (_end);
+				while (n->left != NULL)
+					n = n->left;
+				return (n);
+			}
+
 			pointer_node get_max(pointer_node n)
+			{
+				while (n->right != NULL && n->right != _end)
+					n = n->right;
+				return (n);
+			}
+
+			pointer_node get_max(pointer_node n) const
 			{
 				while (n->right != NULL && n->right != _end)
 					n = n->right;

@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 09:34:52 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/25 16:57:32 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/25 17:55:58 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ class map {
 		}
 		size_type max_size() const
 		{
-			return _alloc.max_size();
+			return _tree.max_size();
 		}
 
 /***************************************ELEMENT ACCESS****************************************/
@@ -156,16 +156,21 @@ class map {
 			it = insert(it, ft::make_pair(key, T()));
 			return (*it).second;
 		}
-		// mapped_type& at(const key_type& k)
-		// {
+		mapped_type& at(const key_type& key)
+		{
+			iterator it = lower_bound(key);
+				if (it->first != key)
+					throw std::out_of_range("map::at::out_of_range");
+			return it->second;
+		}
 
-		// 	//se servir de search
-		// 	//si pas trouve throw exception out of range
-		// }
-		// mapped_type& at (const key_type& k) const
-		// {
-
-		// }
+		mapped_type& at (const key_type& key) const
+		{
+			const_iterator it = lower_bound(key);
+				if (it->first != key)
+					throw std::out_of_range("map::at::out_of_range");
+			return it->second;
+		}
 
 /***************************************MODIFIERS****************************************/
 
@@ -206,7 +211,7 @@ class map {
 
 		void clear()
 		{
-			_tree.clear(_tree.get_root());
+			_tree.clear();
 		}
 
 /***************************************OBSERVERS****************************************/
@@ -236,7 +241,57 @@ class map {
 			return end();
 		}
 
+		iterator upper_bound(const key_type& k)
+		{
+			for (iterator tmp = begin(); tmp != end(); tmp++)
+				if ((key_comp()(k, tmp->first)))
+					return tmp;
+			return end();
+		}
 
+		const_iterator upper_bound(const key_type& k) const
+		{
+			for (const_iterator tmp = begin(); tmp != end(); tmp++)
+				if ((key_comp()(k, tmp->first)))
+					return tmp;
+			return end();
+		}
+
+		ft::pair<const_iterator,const_iterator> equal_range(const key_type& k) const
+		{
+			return ft::make_pair(lower_bound(k), upper_bound(k));
+		}
+
+		ft::pair<iterator,iterator>	equal_range(const key_type& k)
+		{
+			return ft::make_pair(lower_bound(k), upper_bound(k));
+		}
+
+		size_type count(const key_type& k) const
+		{
+			if (find(k) != end())
+				return 1;
+			return 0;
+		}
+
+		iterator find (const key_type& k)
+		{
+			//cheche dans tree
+			pointer_node n = _tree.search(ft::make_pair(k, mapped_type()));
+			if (n)
+				return (iterator(n));
+			//si il y a un node renvoie un iterator du node
+			//sinon renvoi end()
+			return end();
+		}
+
+		const_iterator find (const key_type& k) const
+		{
+			pointer_node n = _tree.search(ft::make_pair(k, mapped_type()));
+			if (n)
+				return (const_iterator(n));
+			return end();
+		}
 	};
 
 	template<class T, class Alloc, class Compare, class Allocator>
