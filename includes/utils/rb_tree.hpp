@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 11:38:55 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/25 17:55:15 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/26 16:24:43 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -403,6 +403,7 @@ namespace ft {
 			pointer_node get_root(void) const { return (_root); }
 			pointer_node get_end(void) const { return (_end); }
 			size_type max_size() const {return _alloc.max_size();}
+
 			pointer_node get_grand_parent(pointer_node n)
 			{
 				pointer_node p = n->parent;
@@ -431,154 +432,103 @@ namespace ft {
 
 			void	left_rotate(pointer_node x)
 			{
-				pointer_node tmp = x->right;
+				pointer_node y = x->right;
+
+				x->right = y->left;
+				if (y->left != NULL)
+					y->left->parent = x;
+				if (y != NULL)
+					y->parent = x->parent;
 				if (x->parent == NULL)
-					_root = tmp;
+					_root = y;
+				else if (x == x->parent->left)
+					x->parent->left = y;
 				else
-				{
-					if (x == x->parent->left)
-						x->parent->left = tmp;
-					else
-						x->parent->right = tmp;
-				}
-				if (tmp != NULL)
-					tmp->parent = x->parent;
+					x->parent->right = y;
+				y->left = x;
+				x->parent = y;
 
-				x->right = tmp->left;
-				if (tmp->left != NULL)
-					tmp->left->parent = x;
-
-
-				//on attache x a gauche de tmp
-				tmp->left = x;
-				x->parent = tmp;
 			}
+
 			void	right_rotate(pointer_node x)
 			{
-				pointer_node tmp = x->left;
+				pointer_node y = x->left;
+
+				x->left = y->right;
+				if (y->right != NULL)
+					y->right->parent = x;
+				if (y != NULL)
+					y->parent = x->parent;
 				if (x->parent == NULL)
-					_root = tmp;
+					_root = y;
+				else if (x == x->parent->right)
+					x->parent->right = y;
 				else
-				{
-					if (x == x->parent->left)
-						x->parent->left = tmp;
-					else
-						x->parent->right = tmp;
-				}
-				if (tmp != NULL)
-					tmp->parent = x->parent;
-				x->left = tmp->right;
-				if (tmp->right != NULL)
-					tmp->right->parent = x;
-				tmp->right = x;
-				x->parent = tmp;
+					x->parent->left = y;
+				y->right = x;
+				x->parent = y;
 			}
 
-			// iterator insert(const_reference val)
-			// {
-			// 	pointer_node n = create_node(node(val));
-			// 	// Insertion d'un nouveau nœud dans l'arbre
-			// 	ft::pair<pointer_node, bool> pair;
-			// 	pair = insertion_recursif(_root, n);
-
-			// 	// Réparation de l'arbre au cas où les propriétés rouge-noir seraient violées
-			// 	insertion_repare_arbre(n);
-
-			// 	// Recherche de la nouvelle racine à renvoyer
-			// 	_root = n;
-
-			// 	while (_root->parent != NULL)
-			// 		_root = _root->parent;
-
-			// 	return n;
-			// }
-			void insert(const_reference value)
+			void insert(const_reference val)
 			{
-				pointer_node n = search(value);
-				if (n != NULL)
+				if (search(val) != NULL)
 					return;
 				if (this->_size)
 					this->_end->parent->right = NULL; // supprime end
 				else
 					this->_root = NULL;
 				++this->_size;
-			/* Cree un noeud rouge */
-				pointer_node inserted_node = create_node(node(value));
-				inserted_node->color = RED;
-			/* Arbre vide on insert le noeud a la racine */
+				pointer_node n = create_node(node(val));
+				n->color = RED;
 				if (this->_root == NULL)
-					this->_root = inserted_node;
-				else
 				{
-					pointer_node n = this->_root;
-					while (true)
-					{
-					/* Tant que plus petit on se deplace a gauche jusqua trouver une place*/
-						if (this->_comp(value, n->value) == true)
-						{
-							if (n->left == NULL && n->left != this->_end)
-							{
-								n->left = inserted_node;
-								break;
-							}
-							else
-								n = n->left;
-						}
-					/* Tant que plus grand on se deplace a droit jusqua trouver une place*/
-						else
-						{
-							if (n->right == NULL && n->right != this->_end)
-							{
-								n->right = inserted_node;
-								break;
-							}
-							else
-								n = n->right;
-						}
-					}
-				/* On le relie au reste de l'arbre.*/
-					inserted_node->parent = n;
+					this->_root = n;
+					// n->color = RED;
+					// this->_size++;
 				}
-			/* On verifie que les regle de larbre sont ok */
-			// insert_case1(inserted_node);
-			insertion_repare_arbre(inserted_node);
-			/* Replace end a la fin de l'arbre */
-			update_end();
-		}
+				else
+					n = insertion_recursif(_root, n);
+				insertion_repare_arbre(n);
+				update_end();
+			}
+
+			pointer_node insertion_recursif(pointer_node root, pointer_node n)
+			{
+				//Compare newKey with rootKey.
+				if (_comp(n->value, root->value))
+				{
+					//If newKey is greater than rootKey, traverse through the left subtree
+					if (root->left != NULL)
+						return insertion_recursif(root->left, n);
+					else
+						root->left = n;
+				}
+				else if (root != NULL && _comp(root->value, n->value))
+				{
+					if (root->right != NULL)
+						return insertion_recursif(root->right, n);
+					else
+						root->right = n;
+				}
+				n->parent = root;
+				// n->left = NULL;
+				// n->right = NULL;
+				// n->color = RED;
+				// this->_size++;
+				return n;
+			}
 
 			template<class InputIterator>
 			void insert(InputIterator first, InputIterator last)
 			{
+				std::cout << "insert " << first->first <<std::endl;
 				for (; first != last; first++)
+				{
+					std::cout << " first " << first->first << std::endl;
 					insert(*first);
+				}
 			}
 
-			// ft::pair<pointer_node, bool> insertion_recursif(pointer_node root, pointer_node n)
-			// {
-			// 	// Descente récursive dans l'arbre jusqu'à atteindre une feuille
-			// 	if (_root != NULL && _comp(n->value, root->value))
-			// 	{
-    		// 		if (_root->left != NULL)
-			// 			return insertion_recursif(_root->left, n);
-			// 		else
-			// 			_root->left = n;
-  			// 	}
-			// 	else if (_root != NULL && _comp(_root->value, n->value))
-			// 	{
-			// 		if (_root->right != NULL)
-			// 			return insertion_recursif(_root->right, n);
-			// 		else
-			// 			_root->right = n;
-  			// 	}
-			// 	else if (_root != NULL)
-			// 		return ft::make_pair(_root, false);
-  			// 	// Insertion du nouveau noeud n
-			// 	n->parent = _root;
-			// 	n->left = NULL;
-			// 	n->right = NULL;
-			// 	n->color = RED;
-			// 	return ft::make_pair(n, true);
-			// }
 			void insertion_repare_arbre(pointer_node n)
 			{
 				if (n->parent == NULL)
@@ -618,7 +568,6 @@ namespace ft {
 
 		void update_end(void)
 		{
-
 			if (_size == 0)
 			{
 				if (_end == NULL)

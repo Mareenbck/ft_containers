@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 15:24:11 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/25 17:34:59 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/26 16:03:04 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,6 @@
 #include <list>
 
 /********************************CONSTRUCTORS**********************************/
-// // typedef _pair<const T1, T2> T3;
-// void ft_constructor_tester(void)
-// {
-// 	std::list<unsigned int> lst;
-// 	unsigned int lst_size = 7;
-// 	for (unsigned int i = 0; i < lst_size; ++i)
-// 		lst.push_back((lst_size - i));
-
-// 	ft::map<unsigned int, unsigned int> mp(lst.begin(), lst.end());
-// }
 
 void ft_check_map_constructor(void)
 {
@@ -161,7 +151,7 @@ void ft_check_count(void)
 void map_tests(void)
 {
 	/**CONSTRUCTORS**/
-		// ft_check_map_constructor();
+		ft_check_map_constructor();
 		// ft_constructor_tester();
 
 	/**CAPACITY**/
@@ -174,6 +164,6 @@ void map_tests(void)
 	/**OPERATIONS*/
 		// ft_check_lowerbound();
 		// ft_check_find();
-		ft_check_count();
+		// ft_check_count();
 
 }

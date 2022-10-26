@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 09:34:52 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/25 17:55:58 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/26 16:22:30 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,19 +180,13 @@ class map {
 			/* bool : true si la pair a ete inseree */
 			return (ft::make_pair<iterator, bool>( this->insert(this->begin(), value), size_before != this->_tree.get_size()));
 		}
+
 		//ne peut pas fonctionner car insert de tree est en void et ne renvoi pas un iterator
 		// ft::pair<iterator, bool>	insert(const_reference value)
 		// {
 		// 	size_type	pre_size = size();
 		// 	iterator node = _tree.insert(value);
 		// 	return ft::make_pair(node, size() - pre_size);
-		// }
-
-		// iterator insert (iterator position, const_reference val)
-		// {
-		// 	(void)position;
-		// 	return _tree.insert(val);
-		// 	// return (iterator(this->_tree.search(val)));
 		// }
 
 		iterator insert(iterator position, const_reference value)
