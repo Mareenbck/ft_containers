@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 11:38:55 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/26 16:24:43 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/10/26 18:27:10 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -350,7 +350,6 @@ namespace ft {
 				clear();
 			}
 
-		// private:
 			rb_tree	&operator=(const rb_tree &rhs)
 			{
 				// _comp = rhs._comp;
@@ -362,7 +361,8 @@ namespace ft {
 				return (*this);
 			}
 
-		public:
+/***************************************MODIFIERS****************************************/
+
 			void clear()
 			{
 				_branch_clear(_root);
@@ -398,37 +398,7 @@ namespace ft {
 				_alloc.deallocate(n, 1);
 			}
 
-			allocator_type get_allocator(void) const { return (_alloc); }
-			size_type get_size(void) const { return (_size); }
-			pointer_node get_root(void) const { return (_root); }
-			pointer_node get_end(void) const { return (_end); }
-			size_type max_size() const {return _alloc.max_size();}
-
-			pointer_node get_grand_parent(pointer_node n)
-			{
-				pointer_node p = n->parent;
-				if (p == NULL)
-					return NULL; // Un noeud sans parent n'a pas de grand-parent
-				return p->parent;
-			}
-			pointer_node get_bro(pointer_node n)
-			{
-				pointer_node p = n->parent;
-				if (p == NULL)
-					return NULL; // Un noeud sans parent n'a pas de frere
-				if (n == p->left)
-					return p->right;
-				else
-					return p->left;
-			}
-			pointer_node get_uncle(pointer_node n)
-			{
-				pointer_node p = n->parent;
-				pointer_node g =  get_grand_parent(n);
-				if (g == NULL)
-					return NULL; // Pas de grand parent, donc pas d'oncle
-				return get_bro(p);
-			}
+/***************************************OPERATIONS****************************************/
 
 			void	left_rotate(pointer_node x)
 			{
@@ -471,21 +441,22 @@ namespace ft {
 
 			void insert(const_reference val)
 			{
-				if (search(val) != NULL)
-					return;
+				// pointer_node x = search(val);
+				// if (x != NULL)
+				// {
+				// 	std::cout << " dans search " << std::endl;
+				// 	return;
+				// }
 				if (this->_size)
+
 					this->_end->parent->right = NULL; // supprime end
 				else
 					this->_root = NULL;
-				++this->_size;
+				this->_size++;
 				pointer_node n = create_node(node(val));
 				n->color = RED;
 				if (this->_root == NULL)
-				{
 					this->_root = n;
-					// n->color = RED;
-					// this->_size++;
-				}
 				else
 					n = insertion_recursif(_root, n);
 				insertion_repare_arbre(n);
@@ -511,9 +482,9 @@ namespace ft {
 						root->right = n;
 				}
 				n->parent = root;
-				// n->left = NULL;
-				// n->right = NULL;
-				// n->color = RED;
+				n->left = NULL;
+				n->right = NULL;
+				n->color = RED;
 				// this->_size++;
 				return n;
 			}
@@ -521,12 +492,8 @@ namespace ft {
 			template<class InputIterator>
 			void insert(InputIterator first, InputIterator last)
 			{
-				std::cout << "insert " << first->first <<std::endl;
 				for (; first != last; first++)
-				{
-					std::cout << " first " << first->first << std::endl;
 					insert(*first);
-				}
 			}
 
 			void insertion_repare_arbre(pointer_node n)
@@ -593,37 +560,158 @@ namespace ft {
 			// 	delete_node(root);
 			// }
 
-		/* Renvoie le pointeur vers l'element passe en param ou null */
 		pointer_node search(const_reference val)
 		{
-			pointer_node n = this->_root;
-			while (n != NULL)
+			pointer_node current = _root;
+			while (current != NULL)
 			{
-				/* Element trouve */
-				if (this->_comp(val, n->value) == false && this->_comp(n->value, val) == false && n != this->_end)
-					return (n);
-				/* plus petit va a gauche */
-				else if (this->_comp(val, n->value) == true)
-					n = n->left;
-				/* Plus grand va a droite */
+				if (_comp(val, current->value))
+					current = current->left;
+				else if (_comp(current->value, val))
+					current = current->right;
 				else
-					n = n->right;
+					return current;
 			}
-			return (n);
+			return NULL;
 		}
+
 		pointer_node search(const_reference val) const
 		{
-			pointer_node n = this->_root;
-			while (n != NULL)
+			pointer_node current = _root;
+			while (current != NULL)
 			{
-				if (this->_comp(val, n->value) == false && this->_comp(n->value, val) == false)
-					return (n);
-				else if (this->_comp(val, n->value) == true)
-					n = n->left;
+				if (_comp(val, current->value))
+					current = current->left;
+				else if (_comp(current->value, val))
+					current = current->right;
 				else
-					n = n->right;
+					return current;
 			}
-			return (n);
+			return NULL;
+		}
+
+		void transplant(pointer_node x, pointer_node y)
+		{
+			if (x->parent == NULL)
+				_root = y;
+			else if (x == x->parent->left)
+				x->parent->left = y;
+			else
+				x->parent->right = y;
+			y->parent = x->parent;
+		}
+
+
+		void	erase(pointer_node node)
+		{
+			t_color origrinalColor = node->color;
+			pointer_node x;
+			pointer_node y = node;
+			if (node->left == NULL)
+			{
+				x = node->right;
+				transplant(node, x);
+			}
+			else if (node->right == NULL)
+			{
+				x = node->left;
+				transplant(node, x);
+			}
+			else
+			{
+				y = get_min(node->right);
+				origrinalColor = y->color;
+				x = y->right;
+				if (node == y->parent)
+					x->parent = y;
+				else
+				{
+					transplant(y, y->right);
+					y->right = node->right;
+					y->right->parent = y;
+				}
+				// _transplant(node, y);
+				// y->left = node->left;
+				// y->left->parent = y;
+				// y->color = node->color;
+				y->color = origrinalColor;
+			}
+			_alloc.destroy(node);
+			_alloc.deallocate(node, 1);
+			_size--;
+			if (origrinalColor == BLACK)
+				delete_fix(x);
+		}
+
+		void delete_fix (pointer_node x)
+		{
+			pointer_node s;
+			while (x != _root && x->color == BLACK)
+			{
+				if (x == x->parent->left)
+				{
+					s = x->parent->right;
+					if (s->color == RED)
+					{
+						s->color = BLACK;
+						x->parent->color = RED;
+						left_rotate(x->parent);
+						s = x->parent->right;
+					}
+					if (s->left->color == BLACK && s->right->color == BLACK)
+					{
+						s->color = RED;
+						x = x->parent;
+					}
+					else
+					{
+						if (s->right->color == BLACK)
+						{
+							s->left->color = BLACK;
+							s->color = RED;
+							right_rotate(s);
+							s = x->parent->right;
+						}
+						s->color = x->parent->color;
+						x->parent->color = BLACK;
+						s->right->color = BLACK;
+						left_rotate(x->parent);
+						x = _root;
+					}
+				}
+				else
+				{
+					s = x->parent->left;
+					if (s->color == RED)
+					{
+						s->color = BLACK;
+						x->parent->color = RED;
+						right_rotate(x->parent);
+						s = x->parent->left;
+					}
+					if (s->right->color == BLACK && s->left->color == BLACK)
+					{
+						s->color = RED;
+						x = x->parent;
+					}
+					else
+					{
+						if (s->left->color == BLACK)
+						{
+							s->right->color = BLACK;
+							s->color = RED;
+							left_rotate(s);
+							s = x->parent->left;
+						}
+						s->color = x->parent->color;
+						x->parent->color = BLACK;
+						s->left->color = BLACK;
+						right_rotate(x->parent);
+						x = _root;
+					}
+				}
+			}
+			x->color = BLACK;
 		}
 
 /***************************************ITERATORS****************************************/
@@ -667,7 +755,39 @@ namespace ft {
 				return const_reverse_iterator(it);
 			}
 
-/***************************************UTILS****************************************/
+/***************************************ELEMENT ACCESS****************************************/
+
+			allocator_type get_allocator(void) const { return (_alloc); }
+			size_type get_size(void) const { return (_size); }
+			pointer_node get_root(void) const { return (_root); }
+			pointer_node get_end(void) const { return (_end); }
+			size_type max_size() const {return _alloc.max_size();}
+
+			pointer_node get_grand_parent(pointer_node n)
+			{
+				pointer_node p = n->parent;
+				if (p == NULL)
+					return NULL; // Un noeud sans parent n'a pas de grand-parent
+				return p->parent;
+			}
+			pointer_node get_bro(pointer_node n)
+			{
+				pointer_node p = n->parent;
+				if (p == NULL)
+					return NULL; // Un noeud sans parent n'a pas de frere
+				if (n == p->left)
+					return p->right;
+				else
+					return p->left;
+			}
+			pointer_node get_uncle(pointer_node n)
+			{
+				pointer_node p = n->parent;
+				pointer_node g =  get_grand_parent(n);
+				if (g == NULL)
+					return NULL; // Pas de grand parent, donc pas d'oncle
+				return get_bro(p);
+			}
 
 			pointer_node get_min(pointer_node n)
 			{
@@ -700,6 +820,7 @@ namespace ft {
 					n = n->right;
 				return (n);
 			}
+
 
 	};
 }
