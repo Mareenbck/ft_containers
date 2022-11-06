@@ -22,6 +22,8 @@
 
 namespace ft {
 
+	#define LEAF NULL
+
 	typedef enum s_color {
 		RED,
 		BLACK
@@ -46,15 +48,16 @@ namespace ft {
 			// }
 			~Node(void) {}
 
-			// Node& operator=(const Node& rhs)
-			// {
-			// 	left = rhs.left;
-			// 	right = rhs.right;
-			// 	parent = rhs.parent;
-			// 	color = rhs.color;
-			// 	value = rhs.value;
-			// 	return *this;
-			// }
+			Node& operator=(const Node& rhs)
+			{
+				std::cout << " ici\n";
+				left = rhs.left;
+				right = rhs.right;
+				parent = rhs.parent;
+				color = rhs.color;
+				value = rhs.value;
+				return *this;
+			}
 			pointer_node	left;
 			pointer_node	right;
 			pointer_node	parent;
@@ -67,8 +70,8 @@ namespace ft {
 	class iteratorTree
 	{
 		public:
-			template <class, class, class>
-			friend struct rb_tree;
+			// template <class, class, class>
+			// friend struct rb_tree;
 			typedef T							value_type;
 			typedef value_type*					pointer;
 			typedef value_type&					reference;
@@ -174,8 +177,8 @@ namespace ft {
 	class constIterTree
 	{
 		public:
-			template <class, class, class>
-			friend struct rb_tree;
+			// template <class, class, class>
+			// friend struct rb_tree;
 			typedef const T 						value_type;
 			// typedef value_type*					pointer_node;
 			// typedef typename T::value_type 		data_type;
@@ -338,7 +341,7 @@ namespace ft {
 				_alloc = Allocator();
 				_size = 0;
 				_comp = Compare();
-				_root = NULL;
+				_root = LEAF;
 				_end = create_node();
 			}
 			rb_tree(rb_tree const &rhs)
@@ -366,7 +369,7 @@ namespace ft {
 			void clear()
 			{
 				_branch_clear(_root);
-				_root = NULL;
+				_root = LEAF;
 				_size = 0;
 			}
 
@@ -396,6 +399,27 @@ namespace ft {
 			{
 				_alloc.destroy(n);
 				_alloc.deallocate(n, 1);
+			}
+
+			void swap(rb_tree &tree)
+			{
+				allocator_type tmp_alloc = tree._alloc;
+				size_type tmp_size = tree._size;
+				value_compare tmp_comp = tree._comp;
+				pointer_node tmp_root = tree._root;
+				pointer_node tmp_end = tree._end;
+
+				tree._alloc = this->_alloc;
+				tree._size = this->_size;
+				tree._comp = this->_comp;
+				tree._root = this->_root;
+				tree._end = this->_end;
+
+				this->_alloc = tmp_alloc;
+				this->_size = tmp_size;
+				this->_comp = tmp_comp;
+				this->_root = tmp_root;
+				this->_end = tmp_end;
 			}
 
 /***************************************OPERATIONS****************************************/
@@ -442,23 +466,19 @@ namespace ft {
 			void insert(const_reference val)
 			{
 				// pointer_node x = search(val);
-				// if (x != NULL)
-				// {
-				// 	std::cout << " dans search " << std::endl;
-				// 	return;
-				// }
+				if (search(val) != NULL)
+					return;
 				if (this->_size)
-
-					this->_end->parent->right = NULL; // supprime end
+					this->_end->parent->right = LEAF; // supprime end
 				else
-					this->_root = NULL;
-				this->_size++;
+					this->_root = LEAF;
 				pointer_node n = create_node(node(val));
 				n->color = RED;
 				if (this->_root == NULL)
 					this->_root = n;
 				else
 					n = insertion_recursif(_root, n);
+				this->_size++;
 				insertion_repare_arbre(n);
 				update_end();
 			}
@@ -485,7 +505,6 @@ namespace ft {
 				n->left = NULL;
 				n->right = NULL;
 				n->color = RED;
-				// this->_size++;
 				return n;
 			}
 
@@ -560,17 +579,35 @@ namespace ft {
 			// 	delete_node(root);
 			// }
 
+		// pointer_node search(const_reference val)
+		// {
+		// 	// value_type data_key(k, this->_comp);
+		// 	pointer_node ptr = search_recursif(this->_root, val);
+		// 	if (ptr == NULL)
+		// 		return NULL;
+		// 	return (ptr);
+		// }
+		// pointer_node search_recursif(pointer_node node, const_reference val)
+		// {
+		// 	if (node == NULL )
+		// 		return NULL;
+		// 	if (_comp(val, node->value))
+		// 		return search_recursif(node->left, val);
+		// 	else
+		// 		return search_recursif(node->right, val);
+		// }
+
 		pointer_node search(const_reference val)
 		{
 			pointer_node current = _root;
 			while (current != NULL)
 			{
-				if (_comp(val, current->value))
+				if (_comp(val, current->value) == false && _comp(current->value, val) == false && current != this->_end)
+					return current;
+				else if (this->_comp(val, current->value) == true)
 					current = current->left;
 				else if (_comp(current->value, val))
 					current = current->right;
-				else
-					return current;
 			}
 			return NULL;
 		}
@@ -592,27 +629,43 @@ namespace ft {
 
 		void transplant(pointer_node x, pointer_node y)
 		{
-			if (x->parent == NULL)
+			if (x->parent == LEAF)
 				_root = y;
 			else if (x == x->parent->left)
 				x->parent->left = y;
 			else
 				x->parent->right = y;
+			//probleme avec assignation ? seg a ce niveau
 			y->parent = x->parent;
+			std::cout << " plante en sortie\n";
 		}
 
+		void printTree(pointer_node node, int i = 0)
+		{
+			if (!node && i == 0 && _root)
+				printTree(_root);
+			else if (node != NULL)
+			{
+				std::cout << "Depth: " << i << " Key: " << node->value.first << " value: " << node->value.second << std::endl;
+				if (node->left)
+					printTree(node->left, i + 1);
+				if (node->right)
+					printTree(node->right, i + 1);
+			}
+		}
 
 		void	erase(pointer_node node)
 		{
+			// printTree(_root);
 			t_color origrinalColor = node->color;
 			pointer_node x;
 			pointer_node y = node;
-			if (node->left == NULL)
+			if (node->left == LEAF)
 			{
 				x = node->right;
 				transplant(node, x);
 			}
-			else if (node->right == NULL)
+			else if (node->right == LEAF)
 			{
 				x = node->left;
 				transplant(node, x);
@@ -623,14 +676,17 @@ namespace ft {
 				origrinalColor = y->color;
 				x = y->right;
 				if (node == y->parent)
+				{
 					x->parent = y;
+				}
 				else
 				{
 					transplant(y, y->right);
+					std::cout << "rentre ici \n";
 					y->right = node->right;
 					y->right->parent = y;
 				}
-				// _transplant(node, y);
+				// transplant(node, y);
 				// y->left = node->left;
 				// y->left->parent = y;
 				// y->color = node->color;
@@ -793,7 +849,7 @@ namespace ft {
 			{
 				if (_size == 0)
 					return (_end);
-				while (n->left != NULL)
+				while (n->left != LEAF)
 					n = n->left;
 				return (n);
 			}
@@ -802,7 +858,7 @@ namespace ft {
 			{
 				if (_size == 0)
 					return (_end);
-				while (n->left != NULL)
+				while (n->left != LEAF)
 					n = n->left;
 				return (n);
 			}

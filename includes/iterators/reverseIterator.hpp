@@ -16,36 +16,38 @@
 # include "iteratorTraits.hpp"
 #include <iterator>
 
-namespace ft {
+namespace ft
+{
 	template <class Iterator>
 	class reverse_iterator
 	{
 		protected:
 			Iterator _value;
 
-		public:
-			typedef Iterator iterator_type;
-			typedef typename ft::iterator_traits<Iterator>::difference_type 	difference_type;
-			typedef typename ft::iterator_traits<Iterator>::value_type 			value_type;
-			typedef typename ft::iterator_traits<Iterator>::pointer 			pointer;
-			typedef typename ft::iterator_traits<Iterator>::reference 			reference;
-			typedef typename ft::iterator_traits<Iterator>::iterator_category 	iterator_category;
+	public:
+		typedef Iterator iterator_type;
+		typedef typename ft::iterator_traits<Iterator>::difference_type 	difference_type;
+		typedef typename ft::iterator_traits<Iterator>::value_type 			value_type;
+		typedef typename ft::iterator_traits<Iterator>::pointer 			pointer;
+		typedef typename ft::iterator_traits<Iterator>::reference 			reference;
+		typedef typename ft::iterator_traits<Iterator>::iterator_category 	iterator_category;
 
-		reverse_iterator(void) : _value(iterator_type()) {}
+		reverse_iterator(void) : _value(NULL) {}
 		explicit reverse_iterator(Iterator value) : _value(value) {}
-		reverse_iterator(reverse_iterator const &src) : _value(src.base()) {}
+		template <class U>
+		reverse_iterator(reverse_iterator<U> const &src) : _value(src.base()) {}
 		~reverse_iterator(void) {}
 
-		template <typename U>
-			reverse_iterator(const reverse_iterator<U>& u) : _value(u.base())
-			{
-				// *this = u;
-			}
+		// template <typename U>
+		// reverse_iterator(const reverse_iterator<U>& u) : _value(u.base())
+		// {
+		// 	// *this = u;
+		// }
 
-		reverse_iterator	&operator=(reverse_iterator const &src)
+		template <class U>
+		reverse_iterator &operator=(reverse_iterator<U> const &src)
 		{
-			if (*this != src)
-				_value = src.base();
+			_value = src.base();
 			return *this;
 		}
 
@@ -55,7 +57,7 @@ namespace ft {
 		} // explicit
 		reference operator*() const
 		{
-			Iterator tmp = _value;
+			iterator_type tmp = _value;
 			return *--tmp;
 		}
 		pointer operator->() const
@@ -65,7 +67,7 @@ namespace ft {
 		}
 		reverse_iterator& operator++()
 		{
-			this->_value -= 1;
+			--(this->_value);
 			return *this;
 		}
 		reverse_iterator operator++(int)
@@ -76,9 +78,8 @@ namespace ft {
 		}
 		reverse_iterator& operator--()
 		{
-			this->_value += 1;
+			++(this->_value);
 			return *this;
-
 		}
 		reverse_iterator operator--(int)
 		{
@@ -90,14 +91,14 @@ namespace ft {
 		{
 			return reverse_iterator(_value - n);
 		}
+		reverse_iterator operator-(difference_type n) const
+		{
+			return reverse_iterator(_value + n);
+		}
 		reverse_iterator& operator+=(difference_type n)
 		{
 			_value -= n;
 			return *this;
-		}
-		reverse_iterator operator-(difference_type n) const
-		{
-			return reverse_iterator(_value + n);
 		}
 		reverse_iterator& operator-=(difference_type n)
 		{
