@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 15:24:11 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/26 16:03:04 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/07 13:14:26 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,27 @@ void ft_check_map_constructor(void)
 	// 	std::cout << it->first << " => " << it->second << '\n';
 }
 
+void ft_check_clear()
+{
+	ft::map<char,int> mymap;
+
+	mymap['x']=100;
+	mymap['y']=200;
+	mymap['z']=300;
+
+	std::cout << "mymap contains:\n";
+	for (ft::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+		std::cout << it->first << " => " << it->second << '\n';
+
+	mymap.clear();
+	mymap['a']=1101;
+	mymap['b']=2202;
+
+	std::cout << "mymap contains:\n";
+	for (ft::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+		std::cout << it->first << " => " << it->second << '\n';
+}
+
 /********************************ELEMENT ACCESS**********************************/
 
 void ft_check_at(void)
@@ -81,6 +102,41 @@ void ft_check_at(void)
 		std::cout << it->first << ": " << it->second << '\n';
 }
 
+void ft_check_empty(void)
+{
+	ft::map<char,int> mymap;
+
+	mymap['a']=10;
+	mymap['b']=20;
+	mymap['c']=30;
+
+	std::cout << "mymap contains:\n";
+	for (ft::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+		std::cout << it->first << " => " << it->second << '\n';
+
+	std::cout << "mymap contains:\n";
+	while (!mymap.empty())
+	{
+		std::cout << mymap.begin()->first << " => " << mymap.begin()->second << '\n';
+		mymap.erase(mymap.begin());
+	}
+}
+
+void ft_check_operator(void)
+{
+	ft::map<char,int> first;
+	ft::map<char,int> second;
+
+	first['x']=8;
+	first['y']=16;
+	first['z']=32;
+
+	second=first;                // second now contains 3 ints
+	first=ft::map<char,int>();  // and first is now empty
+
+	std::cout << "Size of first: " << first.size() << '\n';
+	std::cout << "Size of second: " << second.size() << '\n';
+}
 
 /********************************OPERATIONS**********************************/
 
@@ -151,7 +207,8 @@ void ft_check_count(void)
 void map_tests(void)
 {
 	/**CONSTRUCTORS**/
-		ft_check_map_constructor();
+		// ft_check_map_constructor();
+		// ft_check_clear();
 		// ft_constructor_tester();
 
 	/**CAPACITY**/
@@ -160,6 +217,8 @@ void map_tests(void)
 
 	/**ELEMENT ACCESS**/
 		// ft_check_at();
+		ft_check_empty();
+		// ft_check_operator();
 
 	/**OPERATIONS*/
 		// ft_check_lowerbound();

@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 11:38:55 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/26 18:27:10 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/07 13:29:28 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 
 namespace ft {
 
-	#define LEAF NULL
+	// #define NULL NULL
 
 	typedef enum s_color {
 		RED,
@@ -50,7 +50,6 @@ namespace ft {
 
 			Node& operator=(const Node& rhs)
 			{
-				std::cout << " ici\n";
 				left = rhs.left;
 				right = rhs.right;
 				parent = rhs.parent;
@@ -341,7 +340,7 @@ namespace ft {
 				_alloc = Allocator();
 				_size = 0;
 				_comp = Compare();
-				_root = LEAF;
+				_root = NULL;
 				_end = create_node();
 			}
 			rb_tree(rb_tree const &rhs)
@@ -350,9 +349,11 @@ namespace ft {
 			}
 			~rb_tree(void)
 			{
-				clear();
+				clear(_root);
+				// if (_size == 0)
+				delete_node(_end);
+				// clear();
 			}
-
 			rb_tree	&operator=(const rb_tree &rhs)
 			{
 				// _comp = rhs._comp;
@@ -366,23 +367,38 @@ namespace ft {
 
 /***************************************MODIFIERS****************************************/
 
-			void clear()
-			{
-				_branch_clear(_root);
-				_root = LEAF;
-				_size = 0;
-			}
+			// void clear()
+			// {
+			// 	_branch_clear(_root);
+			// 	_root = NULL;
+			// 	_size = 0;
+			// }
 
-			void _branch_clear(pointer_node x)
+
+		void clear(pointer_node root)
+		{
+			if (root == NULL || root == _end)
 			{
-				if (x != NULL)
-				{
-					_branch_clear(x->left);
-					_branch_clear(x->right);
-					_alloc.destroy(x);
-					_alloc.deallocate(x, 1);
-				}
+				_size = 0;
+				return;
 			}
+			clear(root->left);// rappelle recursivement
+			clear(root->right);
+			delete_node(root);
+			_root = NULL;
+			_size = 0;
+		}
+
+			// void _branch_clear(pointer_node x)
+			// {
+			// 	if (x != NULL)
+			// 	{
+			// 		_branch_clear(x->left);
+			// 		_branch_clear(x->right);
+			// 		_alloc.destroy(x);
+			// 		_alloc.deallocate(x, 1);
+			// 	}
+			// }
 			pointer_node create_node(void)
 			{
 				pointer_node n = _alloc.allocate(1);
@@ -468,19 +484,22 @@ namespace ft {
 				// pointer_node x = search(val);
 				if (search(val) != NULL)
 					return;
-				if (this->_size)
-					this->_end->parent->right = LEAF; // supprime end
+				if (_size)
+					_end->parent->right = NULL; // supprime end
 				else
-					this->_root = LEAF;
+					_root = NULL;
 				pointer_node n = create_node(node(val));
 				n->color = RED;
-				if (this->_root == NULL)
-					this->_root = n;
+				if (_root == NULL)
+					_root = n;
 				else
 					n = insertion_recursif(_root, n);
-				this->_size++;
+				_size++;
 				insertion_repare_arbre(n);
-				update_end();
+				// update_end();
+				pointer_node max = get_max(_root);
+				max->right = _end;
+				_end->parent = max;
 			}
 
 			pointer_node insertion_recursif(pointer_node root, pointer_node n)
@@ -566,18 +585,6 @@ namespace ft {
 			this->_end->parent = max;
 		}
 
-			// void clear(pointer_node root)
-			// {
-			// 	if (_root == NULL || _root == _end)
-			// 	{
-			// 		this->_size = 0;
-			// 		this->update_end();
-			// 		return;
-			// 	}
-			// 	clear(root->left);
-			// 	clear(root->right);
-			// 	delete_node(root);
-			// }
 
 		// pointer_node search(const_reference val)
 		// {
@@ -604,7 +611,7 @@ namespace ft {
 			{
 				if (_comp(val, current->value) == false && _comp(current->value, val) == false && current != this->_end)
 					return current;
-				else if (this->_comp(val, current->value) == true)
+				else if (_comp(val, current->value) == true)
 					current = current->left;
 				else if (_comp(current->value, val))
 					current = current->right;
@@ -629,7 +636,7 @@ namespace ft {
 
 		void transplant(pointer_node x, pointer_node y)
 		{
-			if (x->parent == LEAF)
+			if (x->parent == NULL)
 				_root = y;
 			else if (x == x->parent->left)
 				x->parent->left = y;
@@ -660,12 +667,12 @@ namespace ft {
 			t_color origrinalColor = node->color;
 			pointer_node x;
 			pointer_node y = node;
-			if (node->left == LEAF)
+			if (node->left == NULL)
 			{
 				x = node->right;
 				transplant(node, x);
 			}
-			else if (node->right == LEAF)
+			else if (node->right == NULL)
 			{
 				x = node->left;
 				transplant(node, x);
@@ -849,7 +856,7 @@ namespace ft {
 			{
 				if (_size == 0)
 					return (_end);
-				while (n->left != LEAF)
+				while (n->left != NULL)
 					n = n->left;
 				return (n);
 			}
@@ -858,7 +865,7 @@ namespace ft {
 			{
 				if (_size == 0)
 					return (_end);
-				while (n->left != LEAF)
+				while (n->left != NULL)
 					n = n->left;
 				return (n);
 			}

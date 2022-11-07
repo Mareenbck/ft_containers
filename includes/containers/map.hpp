@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 09:34:52 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/26 18:32:59 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/07 13:29:38 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,8 @@ class map {
 
 		void clear()
 		{
-			_tree.clear();
+			_tree.clear(_tree.get_root());
+			// _tree.clear();
 		}
 
 		void erase(iterator position)
