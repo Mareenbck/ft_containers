@@ -6,23 +6,19 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 11:38:55 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/11/07 13:29:28 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/07 17:07:01 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RB_TREE_HPP
 # define RB_TREE_HPP
 
-# include <iostream>
-// # include "../iterators/iteratorTraits.hpp"
-// # include "../iterators/treeIterator.hpp"
-// # include "../iterators/constTreeIterator.hpp"
 # include "../iterators/reverseIterator.hpp"
 # include "../utils/pair.hpp"
 
 namespace ft {
 
-	// #define NULL NULL
+	#define LEAF NULL
 
 	typedef enum s_color {
 		RED,
@@ -42,10 +38,6 @@ namespace ft {
 
 			Node(void) : left(NULL), right(NULL), parent(NULL), color(BLACK), value() {}
 			Node(const T& value) : left(NULL), right(NULL), parent(NULL), color(RED),  value(value) {}
-			// Node(const Node& src)
-			// {
-			// 	*this = src;
-			// }
 			~Node(void) {}
 
 			Node& operator=(const Node& rhs)
@@ -62,15 +54,12 @@ namespace ft {
 			pointer_node	parent;
 			t_color			color;
 			value_type		value;
-
 	};
 
 	template<typename T>
 	class iteratorTree
 	{
 		public:
-			// template <class, class, class>
-			// friend struct rb_tree;
 			typedef T							value_type;
 			typedef value_type*					pointer;
 			typedef value_type&					reference;
@@ -81,8 +70,8 @@ namespace ft {
 			// pointer_node 						NIL;
 
 		private:
-			typedef ft::Node<T>* pointer_node;
-			pointer_node 						_node;
+			typedef ft::Node<T>* 	pointer_node;
+			pointer_node 			_node;
 
 		public:
 			iteratorTree(void) : _node(NULL) {}
@@ -108,7 +97,6 @@ namespace ft {
 			pointer operator->() const
 			{
 				return &_node->value;
-				// return (&this->operator*());
 			}
 			iteratorTree &operator++(void)
 			{
@@ -176,8 +164,6 @@ namespace ft {
 	class constIterTree
 	{
 		public:
-			// template <class, class, class>
-			// friend struct rb_tree;
 			typedef const T 						value_type;
 			// typedef value_type*					pointer_node;
 			// typedef typename T::value_type 		data_type;
@@ -340,7 +326,7 @@ namespace ft {
 				_alloc = Allocator();
 				_size = 0;
 				_comp = Compare();
-				_root = NULL;
+				_root = LEAF;
 				_end = create_node();
 			}
 			rb_tree(rb_tree const &rhs)
@@ -350,9 +336,7 @@ namespace ft {
 			~rb_tree(void)
 			{
 				clear(_root);
-				// if (_size == 0)
 				delete_node(_end);
-				// clear();
 			}
 			rb_tree	&operator=(const rb_tree &rhs)
 			{
@@ -367,48 +351,38 @@ namespace ft {
 
 /***************************************MODIFIERS****************************************/
 
-			// void clear()
-			// {
-			// 	_branch_clear(_root);
-			// 	_root = NULL;
-			// 	_size = 0;
-			// }
-
-
-		void clear(pointer_node root)
-		{
-			if (root == NULL || root == _end)
+			void clear(pointer_node root)
 			{
+				if (root == LEAF || root == _end)
+				{
+					_size = 0;
+					return;
+				}
+				clear(root->left);// rappelle recursivement
+				clear(root->right);
+				delete_node(root);
+				_root = NULL;
 				_size = 0;
-				return;
 			}
-			clear(root->left);// rappelle recursivement
-			clear(root->right);
-			delete_node(root);
-			_root = NULL;
-			_size = 0;
-		}
 
-			// void _branch_clear(pointer_node x)
-			// {
-			// 	if (x != NULL)
-			// 	{
-			// 		_branch_clear(x->left);
-			// 		_branch_clear(x->right);
-			// 		_alloc.destroy(x);
-			// 		_alloc.deallocate(x, 1);
-			// 	}
-			// }
 			pointer_node create_node(void)
 			{
 				pointer_node n = _alloc.allocate(1);
 				_alloc.construct(n, node());
+				n->parent = NULL;
+				n->left = NULL;
+				n->right = NULL;
+				n->color = BLACK;
 				return (n);
 			}
 			pointer_node create_node(node p)
 			{
 				pointer_node n = _alloc.allocate(1);
 				_alloc.construct(n, p);
+				n->color = RED;
+				n->left = NULL;
+				n->right = NULL;
+				n->parent = NULL;
 				return (n);
 			}
 			void delete_node(pointer_node n)
@@ -457,7 +431,6 @@ namespace ft {
 					x->parent->right = y;
 				y->left = x;
 				x->parent = y;
-
 			}
 
 			void	right_rotate(pointer_node x)
@@ -485,9 +458,9 @@ namespace ft {
 				if (search(val) != NULL)
 					return;
 				if (_size)
-					_end->parent->right = NULL; // supprime end
+					_end->parent->right = LEAF; // supprime end
 				else
-					_root = NULL;
+					_root = LEAF;
 				pointer_node n = create_node(node(val));
 				n->color = RED;
 				if (_root == NULL)
@@ -569,21 +542,22 @@ namespace ft {
 					else
 						left_rotate(get_grand_parent(n));
 				}
+				// _root->color = BLACK;
  			}
 
-		void update_end(void)
-		{
-			if (_size == 0)
-			{
-				if (_end == NULL)
-					_end = create_node();
-				_root = _end;
-				return;
-			}
-			pointer_node max = get_max(_root);
-			max->right = _end;
-			this->_end->parent = max;
-		}
+		// void update_end(void)
+		// {
+		// 	if (_size == 0)
+		// 	{
+		// 		if (_end == NULL)
+		// 			_end = create_node();
+		// 		_root = _end;
+		// 		return;
+		// 	}
+		// 	pointer_node max = get_max(_root);
+		// 	max->right = _end;
+		// 	this->_end->parent = max;
+		// }
 
 
 		// pointer_node search(const_reference val)
@@ -609,12 +583,12 @@ namespace ft {
 			pointer_node current = _root;
 			while (current != NULL)
 			{
-				if (_comp(val, current->value) == false && _comp(current->value, val) == false && current != this->_end)
-					return current;
-				else if (_comp(val, current->value) == true)
+				if (_comp(val, current->value))
 					current = current->left;
 				else if (_comp(current->value, val))
 					current = current->right;
+				else
+					return current;
 			}
 			return NULL;
 		}
@@ -634,17 +608,44 @@ namespace ft {
 			return NULL;
 		}
 
+		// void transplant(pointer_node x, pointer_node y)
+		// {
+		// 	std::cout << "rentre dans transplant\n";
+		// 	if (x->parent == LEAF)
+		// 		_root = y;
+		// 	else if (x == x->parent->left)
+		// 	{
+		// 		std::cout << "si le frere de droite est NULL alors le frere de droite devient y\n";
+		// 		x->parent->left = y;
+		// 		// y->parent = x->parent;
+		// 	}
+		// 	else
+		// 	{
+		// 		std::cout << "cousin droit de x devient y\n";
+		// 		x->parent->right = y;
+		// 		// y->parent = x->parent;
+		// 	}
+		// 	std::cout << "sortie des if\n";
+
+		// 	//probleme avec assignation ? seg a ce niveau
+		// 	// y->parent = x->parent;
+		// 	std::cout << " plante en sortie\n";
+		// }
+
 		void transplant(pointer_node x, pointer_node y)
 		{
-			if (x->parent == NULL)
-				_root = y;
-			else if (x == x->parent->left)
-				x->parent->left = y;
-			else
-				x->parent->right = y;
-			//probleme avec assignation ? seg a ce niveau
+			if(y == _root)
+			{
+				_root = x;
+				y->parent = NULL;
+				return;
+			}
 			y->parent = x->parent;
-			std::cout << " plante en sortie\n";
+			if (x->parent->left == y)
+				x->parent->left = x;
+			else
+				x->parent->right = x;
+			std::cout << " le transplant est ok \n";
 		}
 
 		void printTree(pointer_node node, int i = 0)
@@ -664,111 +665,143 @@ namespace ft {
 		void	erase(pointer_node node)
 		{
 			// printTree(_root);
-			t_color origrinalColor = node->color;
 			pointer_node x;
 			pointer_node y = node;
-			if (node->left == NULL)
+			t_color origrinalColor = y->color;
+			std::cout << " Y=>COLOR " << y->color << std::endl;
+			if (node->left == LEAF)
 			{
+				std::cout << "node LEFT est NULL \n";
 				x = node->right;
-				transplant(node, x);
+				transplant(node->right, node);
 			}
-			else if (node->right == NULL)
+			else if (node->right == LEAF)
 			{
+				std::cout << "node RIGHT est NULL \n";
 				x = node->left;
-				transplant(node, x);
+				transplant(node->left, node);
 			}
 			else
 			{
 				y = get_min(node->right);
-				origrinalColor = y->color;
-				x = y->right;
+				x = y;
 				if (node == y->parent)
 				{
+					std::cout << "node est = au parent du min \n";
 					x->parent = y;
 				}
 				else
 				{
+					std::cout << "node != parent du min \n";
 					transplant(y, y->right);
-					std::cout << "rentre ici \n";
 					y->right = node->right;
 					y->right->parent = y;
 				}
+				transplant(node, y);
+				std::cout << "sorie du transplant y, node\n";
 				// transplant(node, y);
-				// y->left = node->left;
-				// y->left->parent = y;
-				// y->color = node->color;
-				y->color = origrinalColor;
+				y->left = node->left;
+				y->left->parent = y;
+				y->color = node->color;
+				// y->color = origrinalColor;
+				std::cout << "attriution color\n";
 			}
 			_alloc.destroy(node);
+			std::cout << "destroy node\n";
+
 			_alloc.deallocate(node, 1);
+			std::cout << "dealllocate node\n";
+
 			_size--;
+			std::cout << "size--\n";
+			std::cout << "originalColor : " << origrinalColor << std::endl;
+			// std::cout << "x->color  : " << x->color << std::endl;
+
 			if (origrinalColor == BLACK)
 				delete_fix(x);
 		}
 
-		void delete_fix (pointer_node x)
+		void delete_fix(pointer_node x)
 		{
-			pointer_node s;
+			std::cout << "coucou deete fix\n";
+			// std::cout << "color : " << x->color << std::endl;
+			pointer_node sibling;
 			while (x != _root && x->color == BLACK)
 			{
+				std::cout << "dans la boucle ? \n";
 				if (x == x->parent->left)
 				{
-					s = x->parent->right;
-					if (s->color == RED)
+					std::cout << "si x est = a son frere de gauche\n";
+					sibling = x->parent->right;
+					if (sibling->color == RED)
 					{
-						s->color = BLACK;
+						x->parent->right->color = BLACK;
 						x->parent->color = RED;
 						left_rotate(x->parent);
-						s = x->parent->right;
+						sibling = x->parent->right;
 					}
-					if (s->left->color == BLACK && s->right->color == BLACK)
+					if (sibling->left->color == BLACK && sibling->right->color == BLACK)
 					{
-						s->color = RED;
+						sibling->color = RED;
 						x = x->parent;
+					}
+					else if (sibling->right->color == BLACK)
+					{
+						sibling->left->color = BLACK;
+						sibling->color = RED;
+						right_rotate(sibling);
+						sibling = x->parent->right;
 					}
 					else
 					{
-						if (s->right->color == BLACK)
-						{
-							s->left->color = BLACK;
-							s->color = RED;
-							right_rotate(s);
-							s = x->parent->right;
-						}
-						s->color = x->parent->color;
-						x->parent->color = BLACK;
-						s->right->color = BLACK;
+						sibling->color = x->parent->color;
+						x->parent->parent->color = BLACK;
+						sibling->right->color = BLACK;
 						left_rotate(x->parent);
-						x = _root;
+						_root = x;
 					}
 				}
 				else
 				{
-					s = x->parent->left;
-					if (s->color == RED)
+					sibling = x->parent->left;
+					std::cout << "si x est = a son frere de droite\n";
+					std::cout << "sibling COLOR = " << sibling->color << std::endl;
+					// std::cout << "sibling rigth COLOR = " << sibling->right->color << std::endl;
+					if (sibling->right == NULL)
+						std::cout << "sibling na pas denfant droit\n";
+					if (sibling->left == NULL)
+						std::cout << "sibling na pas denfant gauche\n";
+					if (sibling->color == RED)
 					{
-						s->color = BLACK;
+						std::cout << "sibling color est RED\n ";
+						// x->parent->left->color = BLACK;
+						sibling->color = BLACK;
+
 						x->parent->color = RED;
 						right_rotate(x->parent);
-						s = x->parent->left;
+						sibling = x->parent->left;
 					}
-					if (s->right->color == BLACK && s->left->color == BLACK)
+					if (sibling->right->color == BLACK && sibling->left->color == BLACK)
 					{
-						s->color = RED;
+						std::cout << "les deux enfants sont BLACKs\n ";
+						sibling->color = RED;
 						x = x->parent;
 					}
 					else
 					{
-						if (s->left->color == BLACK)
+						std::cout << " donc dan le else " << std::endl;
+						if (sibling->left->color == BLACK)
 						{
-							s->right->color = BLACK;
-							s->color = RED;
-							left_rotate(s);
-							s = x->parent->left;
+							std::cout << "lefnats gauche est BLACKs\n ";
+							sibling->right->color = BLACK;
+							sibling->color = RED;
+							left_rotate(sibling);
+							sibling = x->parent->left;
 						}
-						s->color = x->parent->color;
+						std::cout << "lefnats droit est BLACKs\n ";
+						sibling->color = x->parent->color;
 						x->parent->color = BLACK;
-						s->left->color = BLACK;
+						sibling->left->color = BLACK;
 						right_rotate(x->parent);
 						x = _root;
 					}
@@ -776,6 +809,83 @@ namespace ft {
 			}
 			x->color = BLACK;
 		}
+
+		// void delete_fix (pointer_node x)
+		// {
+		// 	std::cout << "coucou deete fix\n";
+		// 	pointer_node sibling;
+		// 	while (x != _root && x->color == BLACK)
+		// 	{
+		// 		if (x == x->parent->left)
+		// 		{
+		// 			sibling = x->parent->right;
+		// 			if (sibling->color == RED)
+		// 			{
+		// 				x->parent->right->color = BLACK;
+		// 				x->parent->color = RED;
+		// 				left_rotate(x->parent);
+		// 				sibling = x->parent->right;
+
+		// 				// sibling->color = BLACK;
+		// 				// x->parent->color = RED;
+		// 				// left_rotate(x->parent);
+		// 				// sibling = x->parent->right;
+		// 			}
+		// 			if (sibling->left->color == BLACK && sibling->right->color == BLACK)
+		// 			{
+		// 				sibling->color = RED;
+		// 				x = x->parent;
+		// 			}
+		// 			else
+		// 			{
+		// 				if (s->right->color == BLACK)
+		// 				{
+		// 					s->left->color = BLACK;
+		// 					s->color = RED;
+		// 					right_rotate(s);
+		// 					s = x->parent->right;
+		// 				}
+		// 				s->color = x->parent->color;
+		// 				x->parent->color = BLACK;
+		// 				s->right->color = BLACK;
+		// 				left_rotate(x->parent);
+		// 				x = _root;
+		// 			}
+		// 		}
+		// 		else
+		// 		{
+		// 			s = x->parent->left;
+		// 			if (s->color == RED)
+		// 			{
+		// 				s->color = BLACK;
+		// 				x->parent->color = RED;
+		// 				right_rotate(x->parent);
+		// 				s = x->parent->left;
+		// 			}
+		// 			if (s->right->color == BLACK && s->left->color == BLACK)
+		// 			{
+		// 				s->color = RED;
+		// 				x = x->parent;
+		// 			}
+		// 			else
+		// 			{
+		// 				if (s->left->color == BLACK)
+		// 				{
+		// 					s->right->color = BLACK;
+		// 					s->color = RED;
+		// 					left_rotate(s);
+		// 					s = x->parent->left;
+		// 				}
+		// 				s->color = x->parent->color;
+		// 				x->parent->color = BLACK;
+		// 				s->left->color = BLACK;
+		// 				right_rotate(x->parent);
+		// 				x = _root;
+		// 			}
+		// 		}
+		// 	}
+		// 	x->color = BLACK;
+		// }
 
 /***************************************ITERATORS****************************************/
 			iterator begin(void)
@@ -852,14 +962,14 @@ namespace ft {
 				return get_bro(p);
 			}
 
-			pointer_node get_min(pointer_node n)
-			{
-				if (_size == 0)
-					return (_end);
-				while (n->left != NULL)
-					n = n->left;
-				return (n);
-			}
+			// pointer_node get_min(pointer_node n)
+			// {
+			// 	if (_size == 0)
+			// 		return (_end);
+			// 	while (n->left != NULL)
+			// 		n = n->left;
+			// 	return (n);
+			// }
 
 			pointer_node get_min(pointer_node n) const
 			{
