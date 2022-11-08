@@ -652,11 +652,21 @@ namespace ft {
 				return ;
 			}
 			if (child->parent == NULL)
+			{
+				std::cout << "child->parent est NULL \n";
+
 				_root = parent;
+			}
 			else if (parent == child->parent->left)
+			{
+				std::cout << "child->parent->left est le parent \n";
 				child->parent->left = child;
+			}
 			else
+			{
+				std::cout << "ou pas \n";
 				child->parent->right = child;
+			}
 			child->parent = parent->parent;
 			std::cout << "trnasplant ici \n";
 		}
@@ -679,9 +689,9 @@ namespace ft {
 		{
 			// printTree(_root);
 			std::cout << "rentre dans erase avec : " << node->value.first << std::endl;
-			t_color origrinalColor = node->color;
+			// t_color origrinalColor = node->color;
 			// pointer_node x;
-			pointer_node y = node;
+			// pointer_node y = node;
 			if (!node->left && !node->right)
 			{
 				std::cout << "n'a pas d'enfant\n";
@@ -710,28 +720,32 @@ namespace ft {
 				delete_node(node);
 				_size--;
 				assign_end();
-				// return ;
 			}
 			else
 			{
-				y = get_min(node->right);
-
-				origrinalColor = y->color;
-				if (y != node->right)
-				{
-					y->parent->left = NULL;
-					y->right = node->right;
-				}
-				node->left->parent = y;
-				node->right->parent = y;
-				y->left = node->left;
-				y->parent = node->parent;
-				if (node == _root)
-					_root = y;
-				else if (node->parent->right == node)
-					node->parent->right = y;
-				else
-					node->parent->left = y;
+				// y = get_min(node->right);
+				// origrinalColor = y->color;
+				//**************************
+				pointer_node pred = get_max(node->left);
+				node->value = pred->value;
+				node = pred;
+				//****************************
+				// if (y != node->right)
+				// {
+				// 	y->parent->left = NULL;
+				// 	y->right = node->right;
+				// }
+				// node->left->parent = y;
+				// node->right->parent = y;
+				// y->left = node->left;
+				// y->parent = node->parent;
+				// if (node == _root)
+				// 	_root = y;
+				// else if (node->parent->right == node)
+				// 	node->parent->right = y;
+				// else
+				// 	node->parent->left = y;
+				//**********************
 				// x = y->right;
 				// if (y->parent == node)
 				// {
@@ -739,7 +753,8 @@ namespace ft {
 				// }
 				// else
 				// {
-				// 	transplant(y, y->right);
+				// 	std::cout << "a 2 enfants\n";
+				// 	transplant(y->right, y);
 				// 	std::cout << "prend le color\n";
 				// 	y->right = node->right;
 				// 	y->right->parent = y;
@@ -747,97 +762,108 @@ namespace ft {
 				// transplant(node, y);
 				// y->left = node->left;
 				// y->left->parent = y;
-				y->color = node->color;
-				delete_node(node);
-				_size--;
-				assign_end();
-				std::cout << "a 2 enfants\n";
+				// y->color = node->color;
+				// delete_node(node);
+				// _size--;
+				// assign_end();
 			}
-			if (origrinalColor == BLACK)
+			pointer_node child = node->right == NULL ? node->left : node->right;
+			if (node->color == BLACK)
+			{
+				node->color = child->color;
 				delete_fix(node);
+			}
+			transplant(node, child);
+			if (node->parent == NULL && child != NULL)
+				child->color = BLACK;
+			delete_node(node);
+			/* Replace end a la fin de l'arbre */
+			update_end();
+			// if (origrinalColor == BLACK)
+			// 	delete_fix(x);
 		}
-		// void _swapNodesValues(Node *x, Node *y)
-		// {
-		// 	key_type tmp;
-		// 	key_type *key1;
-		// 	key_type *key2;
-		// 	value_type tmp;
 
-		// 	key1 = const_cast<key_type *>(&x->value.first);
-		// 	key2 = const_cast<key_type *>(&y->value.first);
-
-		// 	tmp = *key1;
-		// 	*key1 = *key2;
-		// 	*key2 = tmp;
-
-		// 	tmp.second = x->value.second;
-		// 	x->value.second = y->value.second;
-		// 	y->value.second = tmp.second;
-		// }
-
-		void delete_fix (pointer_node x)
+		void delete_fix(pointer_node x)
 		{
-			pointer_node s;
+			std::cout << "coucou deete fix\n";
+			// std::cout << "color : " << x->color << std::endl;
+			pointer_node sibling;
 			while (x != _root && x->color == BLACK)
 			{
+				std::cout << "dans la boucle ? \n";
 				if (x == x->parent->left)
 				{
-					s = x->parent->right;
-					if (s->color == RED)
+					std::cout << "si x est = a son frere de gauche\n";
+					sibling = x->parent->right;
+					if (sibling->color == RED)
 					{
-						s->color = BLACK;
+						x->parent->right->color = BLACK;
 						x->parent->color = RED;
 						left_rotate(x->parent);
-						s = x->parent->right;
+						sibling = x->parent->right;
 					}
-					if (s->left->color == BLACK && s->right->color == BLACK)
+					if (sibling->left->color == BLACK && sibling->right->color == BLACK)
 					{
-						s->color = RED;
+						sibling->color = RED;
 						x = x->parent;
+					}
+					else if (sibling->right->color == BLACK)
+					{
+						sibling->left->color = BLACK;
+						sibling->color = RED;
+						right_rotate(sibling);
+						sibling = x->parent->right;
 					}
 					else
 					{
-						if (s->right->color == BLACK)
-						{
-							s->left->color = BLACK;
-							s->color = RED;
-							right_rotate(s);
-							s = x->parent->right;
-						}
-						s->color = x->parent->color;
-						x->parent->color = BLACK;
-						s->right->color = BLACK;
+						sibling->color = x->parent->color;
+						x->parent->parent->color = BLACK;
+						sibling->right->color = BLACK;
 						left_rotate(x->parent);
-						x = _root;
+						_root = x;
 					}
 				}
 				else
 				{
-					s = x->parent->left;
-					if (s->color == RED)
+					std::cout << "si x est = a son frere de droite\n";
+					sibling = x->parent->left;
+					std::cout << "sibling COLOR = " << sibling->color << std::endl;
+					// std::cout << "sibling rigth COLOR = " << sibling->right->color << std::endl;
+					if (sibling->right == NULL)
+						std::cout << "sibling na pas denfant droit\n";
+					if (sibling->left == NULL)
+						std::cout << "sibling na pas denfant gauche\n";
+					if (sibling->color == RED)
 					{
-						s->color = BLACK;
+						std::cout << "sibling color est RED\n ";
+						// x->parent->left->color = BLACK;
+						sibling->color = BLACK;
+
 						x->parent->color = RED;
 						right_rotate(x->parent);
-						s = x->parent->left;
+						sibling = x->parent->left;
 					}
-					if (s->right->color == BLACK && s->left->color == BLACK)
+					if (sibling->right->color == BLACK && sibling->left->color == BLACK)
 					{
-						s->color = RED;
+						std::cout << "les deux enfants sont BLACKs\n ";
+						sibling->color = RED;
 						x = x->parent;
 					}
 					else
 					{
-						if (s->left->color == BLACK)
+						std::cout << " donc dan le else " << std::endl;
+						if (sibling->left->color == BLACK)
 						{
-							s->right->color = BLACK;
-							s->color = RED;
-							left_rotate(s);
-							s = x->parent->left;
+							std::cout << "lefnats gauche est BLACKs\n ";
+							sibling->right->color = BLACK;
+							sibling->color = RED;
+							left_rotate(sibling);
+							sibling = x->parent->left;
 						}
-						s->color = x->parent->color;
+						std::cout << "lefnats droit est BLACKs\n ";
+						sibling->color = x->parent->color;
 						x->parent->color = BLACK;
-						s->left->color = BLACK;
+						sibling->left->color = BLACK;
 						right_rotate(x->parent);
 						x = _root;
 					}
@@ -847,11 +873,11 @@ namespace ft {
 		}
 
 /***************************************ITERATORS****************************************/
-			iterator begin(void)
-			{
-				//renvoi le minimum
-				iterator it = get_min(_root);
-				return it;
+				iterator begin(void)
+				{
+					// renvoi le minimum
+					iterator it = get_min(_root);
+					return it;
 			}
 			const_iterator begin(void) const
 			{

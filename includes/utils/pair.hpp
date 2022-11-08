@@ -35,14 +35,15 @@ namespace ft {
 			template<class U, class V>
 			pair(const pair<U, V> &p) : first(p.first), second(p.second) {}
 
-			pair& operator=( const pair& src )
+			pair &operator=(const pair &other)
 			{
-				// if (*this == src)
-				// 	return *this;
-				this->first = src.first;
-				this->second = src.second;
+				if (this != &other)
+				{
+					this->first = other.first;
+					this->second = other.second;
+				}
 				return (*this);
-			};
+			}
 
 			~pair(){};
 			// template<class _U1, class _U2>
