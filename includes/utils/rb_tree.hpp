@@ -646,15 +646,19 @@ namespace ft {
 		{
 			if (parent == _root)
 			{
+				std::cout << "ici \n";
 				_root = child;
 				child->parent = NULL;
 				return ;
 			}
-			child->parent = parent->parent;
-			if (parent == child->parent->left)
+			if (child->parent == NULL)
+				_root = parent;
+			else if (parent == child->parent->left)
 				child->parent->left = child;
 			else
 				child->parent->right = child;
+			child->parent = parent->parent;
+			std::cout << "trnasplant ici \n";
 		}
 
 		void printTree(pointer_node node, int i = 0)
@@ -674,11 +678,13 @@ namespace ft {
 		void	erase(pointer_node node)
 		{
 			// printTree(_root);
+			std::cout << "rentre dans erase avec : " << node->value.first << std::endl;
 			t_color origrinalColor = node->color;
-			pointer_node x;
+			// pointer_node x;
 			pointer_node y = node;
 			if (!node->left && !node->right)
 			{
+				std::cout << "n'a pas d'enfant\n";
 				if (node == _root)
 					_root = NULL;
 				else
@@ -691,10 +697,12 @@ namespace ft {
 				delete_node(node);
 				_size--;
 				assign_end();
-				return;
+				// return;
 			}
 			else if (!node->left || !node->right)
 			{
+				std::cout << "n'a qu'1 seul enfant\n";
+
 				if (!node->left)
 					transplant(node->right, node);
 				else
@@ -702,32 +710,70 @@ namespace ft {
 				delete_node(node);
 				_size--;
 				assign_end();
+				// return ;
 			}
 			else
 			{
 				y = get_min(node->right);
+
 				origrinalColor = y->color;
-				x = y->right;
-				if (node == y->parent)
-					x->parent = y;
-				else
+				if (y != node->right)
 				{
-					transplant(y, y->right);
+					y->parent->left = NULL;
 					y->right = node->right;
-					y->right->parent = y;
 				}
+				node->left->parent = y;
+				node->right->parent = y;
+				y->left = node->left;
+				y->parent = node->parent;
+				if (node == _root)
+					_root = y;
+				else if (node->parent->right == node)
+					node->parent->right = y;
+				else
+					node->parent->left = y;
+				// x = y->right;
+				// if (y->parent == node)
+				// {
+				// 	x->parent = y;
+				// }
+				// else
+				// {
+				// 	transplant(y, y->right);
+				// 	std::cout << "prend le color\n";
+				// 	y->right = node->right;
+				// 	y->right->parent = y;
+				// }
 				// transplant(node, y);
 				// y->left = node->left;
 				// y->left->parent = y;
-				// y->color = node->color;
-				y->color = origrinalColor;
+				y->color = node->color;
 				delete_node(node);
 				_size--;
 				assign_end();
+				std::cout << "a 2 enfants\n";
 			}
 			if (origrinalColor == BLACK)
-				delete_fix(x);
+				delete_fix(node);
 		}
+		// void _swapNodesValues(Node *x, Node *y)
+		// {
+		// 	key_type tmp;
+		// 	key_type *key1;
+		// 	key_type *key2;
+		// 	value_type tmp;
+
+		// 	key1 = const_cast<key_type *>(&x->value.first);
+		// 	key2 = const_cast<key_type *>(&y->value.first);
+
+		// 	tmp = *key1;
+		// 	*key1 = *key2;
+		// 	*key2 = tmp;
+
+		// 	tmp.second = x->value.second;
+		// 	x->value.second = y->value.second;
+		// 	y->value.second = tmp.second;
+		// }
 
 		void delete_fix (pointer_node x)
 		{
