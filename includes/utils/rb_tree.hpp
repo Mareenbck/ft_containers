@@ -585,7 +585,15 @@ namespace ft {
 			this->_end->parent = max;
 		}
 
-
+		void assign_end()
+		{
+			pointer_node maxNode = get_max(_root);
+			maxNode->right = _end;
+			_end->parent = maxNode;
+			_end->right = NULL;
+			_end->left = NULL;
+			_end->color = BLACK;
+		}
 		// pointer_node search(const_reference val)
 		// {
 		// 	// value_type data_key(k, this->_comp);
@@ -634,17 +642,19 @@ namespace ft {
 			return NULL;
 		}
 
-		void transplant(pointer_node x, pointer_node y)
+		void transplant(pointer_node child, pointer_node parent)
 		{
-			if (x->parent == NULL)
-				_root = y;
-			else if (x == x->parent->left)
-				x->parent->left = y;
+			if (parent == _root)
+			{
+				_root = child;
+				child->parent = NULL;
+				return ;
+			}
+			child->parent = parent->parent;
+			if (parent == child->parent->left)
+				child->parent->left = child;
 			else
-				x->parent->right = y;
-			//probleme avec assignation ? seg a ce niveau
-			y->parent = x->parent;
-			std::cout << " plante en sortie\n";
+				child->parent->right = child;
 		}
 
 		void printTree(pointer_node node, int i = 0)
@@ -667,15 +677,31 @@ namespace ft {
 			t_color origrinalColor = node->color;
 			pointer_node x;
 			pointer_node y = node;
-			if (node->left == NULL)
+			if (!node->left && !node->right)
 			{
-				x = node->right;
-				transplant(node, x);
+				if (node == _root)
+					_root = NULL;
+				else
+				{
+					if (node == node->parent->left)
+						node->parent->left = NULL;
+					else
+						node->parent->right = NULL;
+				}
+				delete_node(node);
+				_size--;
+				assign_end();
+				return;
 			}
-			else if (node->right == NULL)
+			else if (!node->left || !node->right)
 			{
-				x = node->left;
-				transplant(node, x);
+				if (!node->left)
+					transplant(node->right, node);
+				else
+					transplant(node->left, node);
+				delete_node(node);
+				_size--;
+				assign_end();
 			}
 			else
 			{
@@ -683,13 +709,10 @@ namespace ft {
 				origrinalColor = y->color;
 				x = y->right;
 				if (node == y->parent)
-				{
 					x->parent = y;
-				}
 				else
 				{
 					transplant(y, y->right);
-					std::cout << "rentre ici \n";
 					y->right = node->right;
 					y->right->parent = y;
 				}
@@ -698,10 +721,10 @@ namespace ft {
 				// y->left->parent = y;
 				// y->color = node->color;
 				y->color = origrinalColor;
+				delete_node(node);
+				_size--;
+				assign_end();
 			}
-			_alloc.destroy(node);
-			_alloc.deallocate(node, 1);
-			_size--;
 			if (origrinalColor == BLACK)
 				delete_fix(x);
 		}
