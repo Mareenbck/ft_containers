@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 11:38:55 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/11/07 13:29:28 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/09 16:27:53 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,8 @@ namespace ft {
 			}
 			iteratorTree &operator++(void)
 			{
+				if (!_node)
+					return (*this);
 				if (_node->right != NULL)
 				{
 					_node = _node->right;
@@ -131,6 +133,7 @@ namespace ft {
 				}
 				return *this;
 			}
+
 			iteratorTree operator++(int)
 			{
 				iteratorTree tmp(*this);
@@ -496,10 +499,7 @@ namespace ft {
 					n = insertion_recursif(_root, n);
 				_size++;
 				insertion_repare_arbre(n);
-				// update_end();
-				pointer_node max = get_max(_root);
-				max->right = _end;
-				_end->parent = max;
+				update_end();
 			}
 
 			pointer_node insertion_recursif(pointer_node root, pointer_node n)
@@ -617,12 +617,12 @@ namespace ft {
 			pointer_node current = _root;
 			while (current != NULL)
 			{
-				if (_comp(val, current->value) == false && _comp(current->value, val) == false && current != this->_end)
-					return current;
-				else if (_comp(val, current->value) == true)
+				if (_comp(val, current->value))
 					current = current->left;
 				else if (_comp(current->value, val))
 					current = current->right;
+				else
+					return current;
 			}
 			return NULL;
 		}
@@ -642,33 +642,16 @@ namespace ft {
 			return NULL;
 		}
 
-		void transplant(pointer_node child, pointer_node parent)
+		void transplant(pointer_node old_node, pointer_node new_node)
 		{
-			if (parent == _root)
-			{
-				std::cout << "ici \n";
-				_root = child;
-				child->parent = NULL;
-				return ;
-			}
-			if (child->parent == NULL)
-			{
-				std::cout << "child->parent est NULL \n";
-
-				_root = parent;
-			}
-			else if (parent == child->parent->left)
-			{
-				std::cout << "child->parent->left est le parent \n";
-				child->parent->left = child;
-			}
+			if (old_node->parent == NULL)
+				_root = new_node;
+			else if (old_node == old_node->parent->left)
+				old_node->parent->left = new_node;
 			else
-			{
-				std::cout << "ou pas \n";
-				child->parent->right = child;
-			}
-			child->parent = parent->parent;
-			std::cout << "trnasplant ici \n";
+				old_node->parent->right = new_node;
+			if (new_node != NULL)
+				new_node->parent = old_node->parent;
 		}
 
 		void printTree(pointer_node node, int i = 0)
@@ -687,14 +670,17 @@ namespace ft {
 
 		void	erase(pointer_node node)
 		{
-			// printTree(_root);
-			std::cout << "rentre dans erase avec : " << node->value.first << std::endl;
-			// t_color origrinalColor = node->color;
-			// pointer_node x;
-			// pointer_node y = node;
+			t_color origrinalColor = node->color;
+			pointer_node x;
+			pointer_node y = node;
+			if (this->_size)
+				this->_end->parent->right = NULL; // Supprime end
+			else
+				this->_root = NULL;
+			// --this->size;
 			if (!node->left && !node->right)
 			{
-				std::cout << "n'a pas d'enfant\n";
+				std::cout << node->value.first << " :::::  il n a pas d'enfant \n";
 				if (node == _root)
 					_root = NULL;
 				else
@@ -704,96 +690,51 @@ namespace ft {
 					else
 						node->parent->right = NULL;
 				}
-				delete_node(node);
-				_size--;
-				assign_end();
-				// return;
+				update_end();
+				return ;
 			}
-			else if (!node->left || !node->right)
+			if (!node->left || !node->right)
 			{
-				std::cout << "n'a qu'1 seul enfant\n";
-
+				std::cout << node->value.first << " :::::  il a 1 enfant \n";
 				if (!node->left)
-					transplant(node->right, node);
+					transplant(node, node->right);
 				else
-					transplant(node->left, node);
-				delete_node(node);
-				_size--;
-				assign_end();
+					transplant(node, node->left);
 			}
 			else
 			{
-				// y = get_min(node->right);
-				// origrinalColor = y->color;
-				//**************************
-				pointer_node pred = get_max(node->left);
-				node->value = pred->value;
-				node = pred;
-				//****************************
-				// if (y != node->right)
-				// {
-				// 	y->parent->left = NULL;
-				// 	y->right = node->right;
-				// }
-				// node->left->parent = y;
-				// node->right->parent = y;
-				// y->left = node->left;
-				// y->parent = node->parent;
-				// if (node == _root)
-				// 	_root = y;
-				// else if (node->parent->right == node)
-				// 	node->parent->right = y;
-				// else
-				// 	node->parent->left = y;
-				//**********************
-				// x = y->right;
-				// if (y->parent == node)
-				// {
-				// 	x->parent = y;
-				// }
-				// else
-				// {
-				// 	std::cout << "a 2 enfants\n";
-				// 	transplant(y->right, y);
-				// 	std::cout << "prend le color\n";
-				// 	y->right = node->right;
-				// 	y->right->parent = y;
-				// }
-				// transplant(node, y);
-				// y->left = node->left;
-				// y->left->parent = y;
-				// y->color = node->color;
-				// delete_node(node);
-				// _size--;
-				// assign_end();
+				y = get_min(node->right);
+				origrinalColor = y->color;
+				x = y;
+				if (y->parent == node)
+					x->parent = y;
+				else
+				{
+					transplant(y, y->right);
+					y->right = node->right;
+					y->right->parent = y;
+				}
+				transplant(node, y);
+				y->left = node->left;
+				y->left->parent = y;
+				y->color = origrinalColor;
 			}
-			pointer_node child = node->right == NULL ? node->left : node->right;
-			if (node->color == BLACK)
-			{
-				node->color = child->color;
-				delete_fix(node);
-			}
-			transplant(node, child);
-			if (node->parent == NULL && child != NULL)
-				child->color = BLACK;
 			delete_node(node);
-			/* Replace end a la fin de l'arbre */
+			_size--;
+			if (origrinalColor == BLACK)
+				delete_fix(x);
 			update_end();
-			// if (origrinalColor == BLACK)
-			// 	delete_fix(x);
+			std::cout << " TREE \n";
+			printTree(_root);
 		}
 
 		void delete_fix(pointer_node x)
 		{
-			std::cout << "coucou deete fix\n";
-			// std::cout << "color : " << x->color << std::endl;
 			pointer_node sibling;
 			while (x != _root && x->color == BLACK)
 			{
-				std::cout << "dans la boucle ? \n";
 				if (x == x->parent->left)
 				{
-					std::cout << "si x est = a son frere de gauche\n";
 					sibling = x->parent->right;
 					if (sibling->color == RED)
 					{
@@ -820,47 +761,33 @@ namespace ft {
 						x->parent->parent->color = BLACK;
 						sibling->right->color = BLACK;
 						left_rotate(x->parent);
-						_root = x;
+						x = _root;
 					}
 				}
 				else
 				{
-					std::cout << "si x est = a son frere de droite\n";
 					sibling = x->parent->left;
-					std::cout << "sibling COLOR = " << sibling->color << std::endl;
-					// std::cout << "sibling rigth COLOR = " << sibling->right->color << std::endl;
-					if (sibling->right == NULL)
-						std::cout << "sibling na pas denfant droit\n";
-					if (sibling->left == NULL)
-						std::cout << "sibling na pas denfant gauche\n";
 					if (sibling->color == RED)
 					{
-						std::cout << "sibling color est RED\n ";
-						// x->parent->left->color = BLACK;
 						sibling->color = BLACK;
-
 						x->parent->color = RED;
 						right_rotate(x->parent);
 						sibling = x->parent->left;
 					}
 					if (sibling->right->color == BLACK && sibling->left->color == BLACK)
 					{
-						std::cout << "les deux enfants sont BLACKs\n ";
 						sibling->color = RED;
 						x = x->parent;
 					}
 					else
 					{
-						std::cout << " donc dan le else " << std::endl;
 						if (sibling->left->color == BLACK)
 						{
-							std::cout << "lefnats gauche est BLACKs\n ";
 							sibling->right->color = BLACK;
 							sibling->color = RED;
 							left_rotate(sibling);
 							sibling = x->parent->left;
 						}
-						std::cout << "lefnats droit est BLACKs\n ";
 						sibling->color = x->parent->color;
 						x->parent->color = BLACK;
 						sibling->left->color = BLACK;
