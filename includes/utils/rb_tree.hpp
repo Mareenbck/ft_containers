@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 11:38:55 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/11/09 16:27:53 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/09 17:21:03 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -582,7 +582,7 @@ namespace ft {
 			}
 			pointer_node max = get_max(_root);
 			max->right = _end;
-			this->_end->parent = max;
+			_end->parent = max;
 		}
 
 		void assign_end()
@@ -670,14 +670,11 @@ namespace ft {
 
 		void	erase(pointer_node node)
 		{
+			std::cout << "erase  : " << node->value.first << std::endl;
+			printTree(_root);
 			t_color origrinalColor = node->color;
 			pointer_node x;
 			pointer_node y = node;
-			if (this->_size)
-				this->_end->parent->right = NULL; // Supprime end
-			else
-				this->_root = NULL;
-			// --this->size;
 			if (!node->left && !node->right)
 			{
 				std::cout << node->value.first << " :::::  il n a pas d'enfant \n";
@@ -686,20 +683,37 @@ namespace ft {
 				else
 				{
 					if (node == node->parent->left)
+					{
 						node->parent->left = NULL;
+					}
 					else
 						node->parent->right = NULL;
 				}
+				delete_node(node);
+				--_size;
 				update_end();
 				return ;
 			}
+			if (this->_size)
+				this->_end->parent->right = NULL; // Supprime end
+			else
+				this->_root = NULL;
+			--this->_size;
 			if (!node->left || !node->right)
 			{
 				std::cout << node->value.first << " :::::  il a 1 enfant \n";
-				if (!node->left)
+
+				if (node->left == NULL)
+				{
+					// x = node->right;
 					transplant(node, node->right);
+				}
 				else
+				{
+					// x = node->left;
+
 					transplant(node, node->left);
+				}
 			}
 			else
 			{
@@ -719,13 +733,13 @@ namespace ft {
 				y->left->parent = y;
 				y->color = origrinalColor;
 			}
-			delete_node(node);
 			_size--;
-			if (origrinalColor == BLACK)
+			delete_node(node);
+			if (origrinalColor == BLACK && x != NULL)
 				delete_fix(x);
 			update_end();
-			std::cout << " TREE \n";
-			printTree(_root);
+			// std::cout << " TREE \n";
+			// printTree(_root);
 		}
 
 		void delete_fix(pointer_node x)
@@ -733,32 +747,39 @@ namespace ft {
 			pointer_node sibling;
 			while (x != _root && x->color == BLACK)
 			{
+				std::cout << "x : " << x->value.first << std::endl;
 				if (x == x->parent->left)
 				{
 					sibling = x->parent->right;
 					if (sibling->color == RED)
 					{
-						x->parent->right->color = BLACK;
+						sibling->color = BLACK;
 						x->parent->color = RED;
 						left_rotate(x->parent);
 						sibling = x->parent->right;
+
+						// x->parent->right->color = BLACK;
+						// x->parent->color = RED;
+						// left_rotate(x->parent);
+						// sibling = x->parent->right;
 					}
 					if (sibling->left->color == BLACK && sibling->right->color == BLACK)
 					{
 						sibling->color = RED;
 						x = x->parent;
 					}
-					else if (sibling->right->color == BLACK)
-					{
-						sibling->left->color = BLACK;
-						sibling->color = RED;
-						right_rotate(sibling);
-						sibling = x->parent->right;
-					}
 					else
 					{
+						if (sibling->right->color == BLACK)
+						{
+							sibling->left->color = BLACK;
+							sibling->color = RED;
+							right_rotate(sibling);
+							sibling = x->parent->right;
+						}
 						sibling->color = x->parent->color;
-						x->parent->parent->color = BLACK;
+						x->parent->color = BLACK;
+					std::cout << "delete \n";
 						sibling->right->color = BLACK;
 						left_rotate(x->parent);
 						x = _root;
@@ -894,8 +915,9 @@ namespace ft {
 
 			pointer_node get_max(pointer_node n)
 			{
-				while (n->right != NULL && n->right != _end)
+				while (n && n->right != NULL && n->right != _end)
 					n = n->right;
+				// std::cout << " get max \n" << std::endl;
 				return (n);
 			}
 

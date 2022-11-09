@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 09:34:52 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/11/09 16:22:16 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/09 16:51:03 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,13 +212,13 @@ class map {
 
 		void erase(iterator position)
 		{
-			// std::cout << "erase iterator\n";
+			std::cout << "erase iterator\n";
 			_tree.erase(position.base());
 		}
 
 		size_type erase (const key_type& k)
 		{
-			// std::cout << "erase key type\n";
+			std::cout << "erase key type\n";
 			size_type old_size = this->_tree.get_size();
 			pointer_node p = _tree.search(ft::make_pair(k, mapped_type()));
 			this->_tree.erase(p);
