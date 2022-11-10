@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 11:38:55 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/11/09 17:21:03 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/10 20:11:05 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -675,49 +675,62 @@ namespace ft {
 			t_color origrinalColor = node->color;
 			pointer_node x;
 			pointer_node y = node;
-			if (!node->left && !node->right)
+			// if (!node->left && !node->right)
+			// {
+			// 	std::cout << node->value.first << " :::::  il n a pas d'enfant \n";
+			// 	if (node == _root)
+			// 		_root = NULL;
+			// 	else
+			// 	{
+			// 		if (node == node->parent->left)
+			// 		{
+			// 			node->parent->left = NULL;
+			// 		}
+			// 		else
+			// 			node->parent->right = NULL;
+			// 	}
+			// 	delete_node(node);
+			// 	--_size;
+			// 	update_end();
+			// 	std::cout << " TREE APRES ERASE\n";
+			// 	printTree(_root);
+			// 	return ;
+			// }
+			// if (this->_size)
+			// 	this->_end->parent->right = NULL; // Supprime end
+			// else
+			// 	this->_root = NULL;
+			// --this->_size;
+			// if (!node->left || !node->right)
+			// {
+			// 	std::cout << node->value.first << " :::::  il a 1 enfant \n";
+
+			// 	if (node->left == NULL)
+			// 	{
+			// 		// x = node->right;
+			// 		transplant(node, node->right);
+			// 	}
+			// 	else
+			// 	{
+			// 		// x = node->left;
+
+			// 		transplant(node, node->left);
+			// 	}
+			// }
+			if (node->left == NULL)
 			{
-				std::cout << node->value.first << " :::::  il n a pas d'enfant \n";
-				if (node == _root)
-					_root = NULL;
-				else
-				{
-					if (node == node->parent->left)
-					{
-						node->parent->left = NULL;
-					}
-					else
-						node->parent->right = NULL;
-				}
-				delete_node(node);
-				--_size;
-				update_end();
-				return ;
+				x = node->right;
+				transplant(node, node->right);
 			}
-			if (this->_size)
-				this->_end->parent->right = NULL; // Supprime end
-			else
-				this->_root = NULL;
-			--this->_size;
-			if (!node->left || !node->right)
+			else if (node->right == NULL)
 			{
-				std::cout << node->value.first << " :::::  il a 1 enfant \n";
-
-				if (node->left == NULL)
-				{
-					// x = node->right;
-					transplant(node, node->right);
-				}
-				else
-				{
-					// x = node->left;
-
-					transplant(node, node->left);
-				}
+				x = node->left;
+				transplant(node, node->left);
 			}
 			else
 			{
 				y = get_min(node->right);
+				// y->right = create_node();
 				origrinalColor = y->color;
 				x = y;
 				if (y->parent == node)
@@ -738,8 +751,8 @@ namespace ft {
 			if (origrinalColor == BLACK && x != NULL)
 				delete_fix(x);
 			update_end();
-			// std::cout << " TREE \n";
-			// printTree(_root);
+			std::cout << " TREE APRES ERASE\n";
+			printTree(_root);
 		}
 
 		void delete_fix(pointer_node x)
