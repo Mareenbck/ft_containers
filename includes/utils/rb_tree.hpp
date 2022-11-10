@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 11:38:55 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/11/09 17:21:03 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/10 16:20:47 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -412,6 +412,10 @@ namespace ft {
 			{
 				pointer_node n = _alloc.allocate(1);
 				_alloc.construct(n, p);
+				n->color = RED;
+				n->left = _end;
+				n->right = _end;
+				n->parent = _end;
 				return (n);
 			}
 			void delete_node(pointer_node n)
@@ -450,8 +454,8 @@ namespace ft {
 				x->right = y->left;
 				if (y->left != NULL)
 					y->left->parent = x;
-				if (y != NULL)
-					y->parent = x->parent;
+				// if (y != NULL)
+				y->parent = x->parent;
 				if (x->parent == NULL)
 					_root = y;
 				else if (x == x->parent->left)
@@ -470,8 +474,8 @@ namespace ft {
 				x->left = y->right;
 				if (y->right != NULL)
 					y->right->parent = x;
-				if (y != NULL)
-					y->parent = x->parent;
+				// if (y != NULL)
+				y->parent = x->parent;
 				if (x->parent == NULL)
 					_root = y;
 				else if (x == x->parent->right)
@@ -491,6 +495,7 @@ namespace ft {
 					_end->parent->right = NULL; // supprime end
 				else
 					_root = NULL;
+				_size++;
 				pointer_node n = create_node(node(val));
 				n->color = RED;
 				if (_root == NULL)
@@ -521,9 +526,9 @@ namespace ft {
 						root->right = n;
 				}
 				n->parent = root;
-				n->left = NULL;
-				n->right = NULL;
-				n->color = RED;
+				// n->left = NULL;
+				// n->right = NULL;
+				// n->color = RED;
 				return n;
 			}
 
@@ -672,9 +677,9 @@ namespace ft {
 		{
 			std::cout << "erase  : " << node->value.first << std::endl;
 			printTree(_root);
-			t_color origrinalColor = node->color;
-			pointer_node x;
 			pointer_node y = node;
+			pointer_node x = NULL;
+			t_color origrinalColor = y->color;
 			if (!node->left && !node->right)
 			{
 				std::cout << node->value.first << " :::::  il n a pas d'enfant \n";
@@ -711,46 +716,147 @@ namespace ft {
 				else
 				{
 					// x = node->left;
-
 					transplant(node, node->left);
 				}
 			}
 			else
 			{
+				std::cout << "has 2 children\n";
 				y = get_min(node->right);
+				// y = get_max(node->left);
+				std::cout << "y :: " << y->value.first << std::endl;
+				// node = y;
+				std::cout << "node :: " << node->value.first << " value :: " << node->value.second << std::endl;
+
 				origrinalColor = y->color;
-				x = y;
+				if (!y->right)
+					x = create_node();
+				else
+					x = y->right;
 				if (y->parent == node)
+				{
+					std::cout << "le parent de y = node to delete\n";
 					x->parent = y;
+				}
 				else
 				{
 					transplant(y, y->right);
 					y->right = node->right;
 					y->right->parent = y;
 				}
+
 				transplant(node, y);
 				y->left = node->left;
 				y->left->parent = y;
-				y->color = origrinalColor;
+				y->color = node->color;
 			}
+			std::cout << "******************************\n";
+			printTree(_root);
+			std::cout << "******************************\n";
+			// pointer_node child = node->right == NULL ? node->left : node->right;
 			_size--;
 			delete_node(node);
-			if (origrinalColor == BLACK && x != NULL)
+			if (origrinalColor == BLACK)
+			{
+				node->color = child->color;
 				delete_fix(x);
+			}
+			// transplant(node, child);
+			// if (node->parent == NULL && child != NULL)
+			// 	child->color = BLACK;
 			update_end();
-			// std::cout << " TREE \n";
-			// printTree(_root);
+			std::cout << " TREE APRES ERASE \n";
+			printTree(_root);
+		}
+
+		void delete_fix_cas1(pointer_node n)
+		{
+			std::cout << "delete cas 1\n";
+
+			if (n->parent == NULL)
+				return ;
+			else
+				delete_fix_cas2(n);
+		}
+
+		void delete_fix_cas2(pointer_node n)
+		{
+			std::cout << "delete cas 2\n";
+			if (get_bro(n)->color == RED)
+			{
+				n->parent->color = RED;
+				get_bro(n)->color = BLACK;
+				if (n == n->parent->left)
+					left_rotate(n->parent);
+				else
+					right_rotate(n->parent);
+			}
+			delete_fix_cas3(n);
+		}
+
+		void delete_fix_cas3(pointer_node n)
+		{
+			if (get_bro(n)->color == BLACK && n->parent->color == BLACK)
+			{
+				get_bro(n)->color = RED;
+				// delete_fix_cas1(n->parent);
+				n = n->parent;
+			}
+			else if (get_bro(n)->color == BLACK && n->parent->color == RED)
+			{
+				get_bro(n)->color = RED;
+				n->parent->color  = BLACK;
+			}
+			else
+				delete_fix_cas4(n);
+		}
+
+		void delete_fix_cas4(pointer_node n)
+		{
+			if (get_bro(n)->right->color == BLACK)
+			{
+				get_bro(n)->left->color = BLACK;
+				get_bro(n)->color = RED;
+				right_rotate(get_bro(n));
+			}
+			else if (get_bro(n)->left->color == BLACK)
+			{
+				get_bro(n)->right->color = BLACK;
+				get_bro(n)->color = RED;
+				left_rotate(get_bro(n));
+			}
+			delete_fix_cas5(n);
+		}
+
+		void delete_fix_cas5(pointer_node n)
+		{
+			get_bro(n)->color = n->parent->color;
+			n->parent->color  = BLACK;
+			if (n == n->parent->left)
+			{
+				get_bro(n)->right->color = BLACK;
+				left_rotate(n->parent);
+			}
+			else
+			{
+				get_bro(n)->left->color = BLACK;
+				right_rotate(n->parent);
+			}
 		}
 
 		void delete_fix(pointer_node x)
 		{
 			pointer_node sibling;
+			std::cout << "PRINT AVANT FIX \n";
+			printTree(_root);
 			while (x != _root && x->color == BLACK)
 			{
 				std::cout << "x : " << x->value.first << std::endl;
 				if (x == x->parent->left)
 				{
 					sibling = x->parent->right;
+					std::cout << "sibling :: " << sibling->value.first << std::endl;
+					std::cout << "delete \n";
 					if (sibling->color == RED)
 					{
 						sibling->color = BLACK;
@@ -779,7 +885,6 @@ namespace ft {
 						}
 						sibling->color = x->parent->color;
 						x->parent->color = BLACK;
-					std::cout << "delete \n";
 						sibling->right->color = BLACK;
 						left_rotate(x->parent);
 						x = _root;
