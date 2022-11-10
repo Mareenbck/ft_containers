@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 09:34:52 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/11/09 16:51:03 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/10 19:30:45 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,7 @@ class map {
 
 		ft::pair<iterator, bool> insert(const_reference value)
 		{
+			std::cout << " insert value " << value << std::endl;
 			size_type size_before = this->_tree.get_size();
 			/* bool : true si la pair a ete inseree */
 			return (ft::make_pair<iterator, bool>( this->insert(this->begin(), value), size_before != this->_tree.get_size()));
@@ -200,6 +201,7 @@ class map {
 		template<class InputIterator>
 		void insert(InputIterator first, InputIterator last)
 		{
+			std::cout << "first " << first->second << std::endl;
 			for (; first != last; first++)
 				_tree.insert(*first);
 		}

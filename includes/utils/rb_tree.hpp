@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 11:38:55 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/11/09 17:21:03 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/10 19:37:47 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,10 @@
 # define RB_TREE_HPP
 
 # include <iostream>
-// # include "../iterators/iteratorTraits.hpp"
-// # include "../iterators/treeIterator.hpp"
-// # include "../iterators/constTreeIterator.hpp"
 # include "../iterators/reverseIterator.hpp"
 # include "../utils/pair.hpp"
 
 namespace ft {
-
-	// #define NULL NULL
 
 	typedef enum s_color {
 		RED,
@@ -69,8 +64,6 @@ namespace ft {
 	class iteratorTree
 	{
 		public:
-			// template <class, class, class>
-			// friend struct rb_tree;
 			typedef T							value_type;
 			typedef value_type*					pointer;
 			typedef value_type&					reference;
@@ -179,13 +172,7 @@ namespace ft {
 	class constIterTree
 	{
 		public:
-			// template <class, class, class>
-			// friend struct rb_tree;
 			typedef const T 						value_type;
-			// typedef value_type*					pointer_node;
-			// typedef typename T::value_type 		data_type;
-			// typedef value_type*					pointer;
-			// typedef value_type&					reference;
 			typedef const value_type&			reference;
 			typedef const value_type*			pointer;
 			typedef std::ptrdiff_t				difference_type;
@@ -193,7 +180,6 @@ namespace ft {
 
 		private:
 			typedef ft::Node<T> *		pointer_node;
-			// typedef typename ft::Node<value_type>::pointer_node	pointer_node;
 			pointer_node 				_node;
 
 		public:
@@ -291,12 +277,6 @@ namespace ft {
 			}
 	};
 
-	// template<typename T>
-	// bool operator==(const iteratorTree<T>& x, const constIterTree<T>& y) { return x.base() == y.base(); }
-
-	// template<typename T>
-	// bool operator!=(const iteratorTree<T>& x, const constIterTree<T>& y) { return x.base() != y.base(); }
-
 	template <class T, class Compare, class Allocator = std::allocator<Node<T> > >
 	class rb_tree
 	{
@@ -328,8 +308,8 @@ namespace ft {
 			// typedef typename allocator_type::const_pointer 	const_pointer;
 
 
-			pointer_node	_end;
 		private:
+			pointer_node	_end;
 			allocator_type	_alloc;
 			size_type 		_size;
 			// key_compare		_comp;
@@ -343,8 +323,9 @@ namespace ft {
 				_alloc = Allocator();
 				_size = 0;
 				_comp = Compare();
-				_root = NULL;
 				_end = create_node();
+				_root = _end;
+				// _root->right = _end;
 			}
 			rb_tree(rb_tree const &rhs)
 			{
@@ -388,7 +369,7 @@ namespace ft {
 			clear(root->left);// rappelle recursivement
 			clear(root->right);
 			delete_node(root);
-			_root = NULL;
+			_root = _end;
 			_size = 0;
 		}
 
@@ -406,6 +387,9 @@ namespace ft {
 			{
 				pointer_node n = _alloc.allocate(1);
 				_alloc.construct(n, node());
+				// n->right = NULL;
+				// n->left = NULL;
+				// n->color = BLACK;
 				return (n);
 			}
 			pointer_node create_node(node p)
@@ -450,8 +434,8 @@ namespace ft {
 				x->right = y->left;
 				if (y->left != NULL)
 					y->left->parent = x;
-				if (y != NULL)
-					y->parent = x->parent;
+				// if (y != NULL)
+				y->parent = x->parent;
 				if (x->parent == NULL)
 					_root = y;
 				else if (x == x->parent->left)
@@ -470,8 +454,8 @@ namespace ft {
 				x->left = y->right;
 				if (y->right != NULL)
 					y->right->parent = x;
-				if (y != NULL)
-					y->parent = x->parent;
+				// if (y != NULL)
+				y->parent = x->parent;
 				if (x->parent == NULL)
 					_root = y;
 				else if (x == x->parent->right)
@@ -485,45 +469,56 @@ namespace ft {
 			void insert(const_reference val)
 			{
 				// pointer_node x = search(val);
-				if (search(val) != NULL)
-					return;
-				if (_size)
-					_end->parent->right = NULL; // supprime end
-				else
-					_root = NULL;
+				// if (search(val) != NULL)
+				// 	return;
 				pointer_node n = create_node(node(val));
+				std::cout << "INSERT : " << n->value.second << std::endl;
 				n->color = RED;
-				if (_root == NULL)
+				// if (_size)
+				// 	_end->parent->right = NULL; // supprime end
+				// else
+				// 	_root = NULL;
+				if (_size == 0)
+				{
 					_root = n;
+					_root->right = _end;
+					_root->left = NULL;
+					_end->parent = _root;
+					_root->color = BLACK;
+					_size = 1;
+				}
 				else
 					n = insertion_recursif(_root, n);
 				_size++;
 				insertion_repare_arbre(n);
 				update_end();
+				std::cout << "******INSERT************************\n";
+				printTree(_root);
+				std::cout << "******************************\n";
 			}
 
 			pointer_node insertion_recursif(pointer_node root, pointer_node n)
 			{
 				//Compare newKey with rootKey.
-				if (_comp(n->value, root->value))
+				if (root != _end && _comp(n->value, root->value))
 				{
 					//If newKey is greater than rootKey, traverse through the left subtree
-					if (root->left != NULL)
+					if (root->left != _end)
 						return insertion_recursif(root->left, n);
 					else
 						root->left = n;
 				}
-				else if (root != NULL && _comp(root->value, n->value))
+				else if (root != _end && _comp(root->value, n->value))
 				{
-					if (root->right != NULL)
+					if (root->right != _end)
 						return insertion_recursif(root->right, n);
 					else
 						root->right = n;
 				}
 				n->parent = root;
-				n->left = NULL;
-				n->right = NULL;
-				n->color = RED;
+				// n->left = NULL;
+				// n->right = NULL;
+				// n->color = RED;
 				return n;
 			}
 
@@ -583,6 +578,9 @@ namespace ft {
 			pointer_node max = get_max(_root);
 			max->right = _end;
 			_end->parent = max;
+			// _end->right = create_node();
+			// _end->left = create_node();
+			// _end->color = BLACK;
 		}
 
 		void assign_end()
@@ -594,23 +592,6 @@ namespace ft {
 			_end->left = NULL;
 			_end->color = BLACK;
 		}
-		// pointer_node search(const_reference val)
-		// {
-		// 	// value_type data_key(k, this->_comp);
-		// 	pointer_node ptr = search_recursif(this->_root, val);
-		// 	if (ptr == NULL)
-		// 		return NULL;
-		// 	return (ptr);
-		// }
-		// pointer_node search_recursif(pointer_node node, const_reference val)
-		// {
-		// 	if (node == NULL )
-		// 		return NULL;
-		// 	if (_comp(val, node->value))
-		// 		return search_recursif(node->left, val);
-		// 	else
-		// 		return search_recursif(node->right, val);
-		// }
 
 		pointer_node search(const_reference val)
 		{
@@ -660,7 +641,9 @@ namespace ft {
 				printTree(_root);
 			else if (node != NULL)
 			{
-				std::cout << "Depth: " << i << " Key: " << node->value.first << " value: " << node->value.second << std::endl;
+				std::cout << "Depth: " << i << " Key: " << node->value.first << " value: " << node->value.second << " | color: " << node->color << std::endl;
+				// if (node->parent)
+				// 	std::cout << "      parent :: " << node->parent->value.first << std::endl;
 				if (node->left)
 					printTree(node->left, i + 1);
 				if (node->right)
@@ -672,9 +655,9 @@ namespace ft {
 		{
 			std::cout << "erase  : " << node->value.first << std::endl;
 			printTree(_root);
-			t_color origrinalColor = node->color;
-			pointer_node x;
 			pointer_node y = node;
+			t_color origrinalColor = y->color;
+			pointer_node x;
 			if (!node->left && !node->right)
 			{
 				std::cout << node->value.first << " :::::  il n a pas d'enfant \n";
@@ -717,40 +700,60 @@ namespace ft {
 			}
 			else
 			{
+				std::cout << "has 2 children\n";
 				y = get_min(node->right);
+				std::cout << "y :: " << y->value.first << std::endl;
+				// std::cout << "node :: " << node->value.first << " value :: " << node->value.second << std::endl;
 				origrinalColor = y->color;
-				x = y;
+				if (!y->right)
+					x = create_node();
+				else
+					x = y->right;
+				std::cout << "x :: " << x->value.first << std::endl;
+
 				if (y->parent == node)
+				{
+					std::cout << "le parent de y = node to delete\n";
 					x->parent = y;
+					std::cout << "x encore :: " << x->value.first << std::endl;
+				}
 				else
 				{
 					transplant(y, y->right);
 					y->right = node->right;
 					y->right->parent = y;
 				}
+
 				transplant(node, y);
 				y->left = node->left;
 				y->left->parent = y;
-				y->color = origrinalColor;
+				y->color = node->color;
 			}
-			_size--;
+			std::cout << "******************************\n";
+			printTree(_root);
+			std::cout << "******************************\n";
 			delete_node(node);
-			if (origrinalColor == BLACK && x != NULL)
+			_size--;
+			if (origrinalColor == BLACK)
 				delete_fix(x);
 			update_end();
-			// std::cout << " TREE \n";
-			// printTree(_root);
+			std::cout << " TREE APRES ERASE \n";
+			printTree(_root);
 		}
 
 		void delete_fix(pointer_node x)
 		{
 			pointer_node sibling;
+			// std::cout << "PRINT AVANT FIX \n";
+			// printTree(_root);
 			while (x != _root && x->color == BLACK)
 			{
-				std::cout << "x : " << x->value.first << std::endl;
+				std::cout << "x : " << x->value.first << " value :: " << x->value.second << " parent :: " << x->parent->value.first << std::endl;
 				if (x == x->parent->left)
 				{
 					sibling = x->parent->right;
+					std::cout << "sibling :: " << sibling->value.first << std::endl;
+					std::cout << "delete \n";
 					if (sibling->color == RED)
 					{
 						sibling->color = BLACK;
@@ -779,7 +782,6 @@ namespace ft {
 						}
 						sibling->color = x->parent->color;
 						x->parent->color = BLACK;
-					std::cout << "delete \n";
 						sibling->right->color = BLACK;
 						left_rotate(x->parent);
 						x = _root;
@@ -788,6 +790,10 @@ namespace ft {
 				else
 				{
 					sibling = x->parent->left;
+					std::cout << "sibling COLOR = " << sibling->color << "  value :: " << sibling->value.second << std::endl;
+					sibling->right = create_node();
+					sibling->left = create_node();
+					std::cout << "s rigth COLOR = " << sibling->right->value.first << std::endl;
 					if (sibling->color == RED)
 					{
 						sibling->color = BLACK;
@@ -818,6 +824,23 @@ namespace ft {
 				}
 			}
 			x->color = BLACK;
+			cleanup(_root);
+						std::cout << " delete \n";
+		}
+
+		void cleanup(pointer_node root)
+		{
+			if (root->value.first)
+			{
+				// std::cout << "Depth: " << i << " Key: " << node->value.first << " value: " << node->value.second << " | color: " << node->color << std::endl;
+				// if (node->parent)
+				// 	std::cout << "      parent :: " << node->parent->value.first << std::endl;
+				if (root->left)
+					cleanup(root->left);
+				if (root->right)
+					cleanup(root->right);
+			}
+			delete_node(root);
 		}
 
 /***************************************ITERATORS****************************************/
