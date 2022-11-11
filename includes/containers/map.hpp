@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 09:34:52 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/11/09 16:51:03 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/11 14:40:11 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@
 
 namespace ft {
 
-template <class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<ft::pair<const Key, T> > >
+template <class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<ft::pair<Key, T> > >
 class map {
 
 	public:
 		typedef Key 								key_type;
 		typedef T 									mapped_type;
-		typedef ft::pair<const key_type, mapped_type> 		value_type;
+		typedef ft::pair<key_type, mapped_type> 		value_type;
 		typedef Compare 									key_compare;
 		typedef Allocator 									allocator_type;
 
@@ -212,13 +212,11 @@ class map {
 
 		void erase(iterator position)
 		{
-			std::cout << "erase iterator\n";
 			_tree.erase(position.base());
 		}
 
 		size_type erase (const key_type& k)
 		{
-			std::cout << "erase key type\n";
 			size_type old_size = this->_tree.get_size();
 			pointer_node p = _tree.search(ft::make_pair(k, mapped_type()));
 			this->_tree.erase(p);
