@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 09:34:52 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/11/11 14:40:11 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/11 17:17:48 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <cstddef>
 # include <functional>
 # include <stdexcept>
+# include <limits>
 // # include "../iterators/treeIterator.hpp"
 # include "../iterators/reverseIterator.hpp"
 # include "../utils/pair.hpp"
@@ -38,7 +39,6 @@ class map {
 	public:
 		class value_compare
 		{
-			// friend class map<Key, T, Compare, Allocator>;
 			protected:
 				Compare _comp;
 			public:
@@ -147,6 +147,8 @@ class map {
 		}
 		size_type max_size() const
 		{
+			if (sizeof(T) == 8)
+				return static_cast<size_type>(std::numeric_limits<size_type>::max() / (sizeof(ft::Node<value_type>) + sizeof(T)) / 2);
 			return _tree.max_size();
 		}
 

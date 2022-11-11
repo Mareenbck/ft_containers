@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 14:47:39 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/19 15:00:34 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/11 16:55:15 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,9 +90,7 @@ class vector
 			_alloc = x._alloc;
 			_arr = _alloc.allocate(_capacity);
 			for (size_type i = 0; i < _size; i++)
-			{
 				_alloc.construct(&_arr[i], x._arr[i]);
-			}
 		}
 
 		vector& operator=(const vector& x)
@@ -139,8 +137,6 @@ class vector
 			if (n > max_size())
 				return;
 			clear();
-			// for (size_type i = 0; i < size(); i++)
-				// _alloc.destroy(&_arr[i]);
 			insert(begin(), n, u);
 		}
 
@@ -246,7 +242,6 @@ class vector
 			if (size() >= capacity())
 			{
 				size_type	newCap = capacity() * 2;
-
 				if (newCap == 0) newCap = 1;
 				pointer newArr = _alloc.allocate(newCap);
 				for (size_type i = 0; i < size(); i++)
