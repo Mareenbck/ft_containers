@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 14:47:39 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/11/14 11:45:14 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/14 19:05:45 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ class vector
 	public:
 		explicit vector(const allocator_type& alloc = allocator_type())
 		{
+			std::cout << " cest FT\n";
 			this->_alloc = alloc;
 			this->_arr = _alloc.allocate(0);
 			this->_size = 0;
@@ -58,6 +59,8 @@ class vector
 
 		explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
 		{
+			std::cout << " cest FT\n";
+
 			this->_size = n;
 			this->_capacity = n;
 			this->_alloc = alloc;
@@ -69,6 +72,8 @@ class vector
 		template <class InputIterator>
 			vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),  typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
 			{
+			std::cout << " cest FT\n";
+
 				this->_alloc = alloc;
 				size_t n = 0;
 				for (InputIterator it = first; it != last; ++it)
@@ -85,6 +90,8 @@ class vector
 
 		vector(const vector& x)
 		{
+			std::cout << " CEST FT\n";
+
 			_size = x._size;
 			_capacity = x._size;
 			_alloc = x._alloc;

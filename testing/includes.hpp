@@ -6,32 +6,59 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 10:02:29 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/24 15:25:00 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/14 19:16:13 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef INCLUDES_HPP
 # define INCLUDES_HPP
 
-# include <string>
-# include <iostream>
-# include <ctime>
-# include <cstdlib>
-# include <sstream>
-# include <algorithm>
+#include <iostream>
+#include <string>
+#include <deque>
+#if NS //CREATE A REAL STL EXAMPLE
+	#include <map>
+	#include <stack>
+	#include <vector>
+	# define NS std
+#else
+	#include <../includes/containers/map.hpp>
+	#include <../includes/containers/stack.hpp>
+	#include <../includes/containers/vector.hpp>
+	# define NS ft
+#endif
 
-// # ifndef FT
-// 	#include <map>
-// 	#include <stack>
-// 	#include <vector>
-// 	namespace ft = std;
-// # else
-// 	#include "../map.hpp"
-// 	#include "../stack.hpp"
- # include "../includes/containers/vector.hpp"
- # include "../includes/containers/map.hpp"
- # include "../includes/utils/pair.hpp"
-// # endif
+#include <stdlib.h>
+
+#define MAX_RAM 4294967296
+#define BUFFER_SIZE 4096
+struct Buffer
+{
+	int idx;
+	char buff[BUFFER_SIZE];
+};
+
+
+#define COUNT (MAX_RAM / (int)sizeof(Buffer))
+
+template<typename T>
+class MutantStack : public NS::stack<T>
+{
+public:
+	MutantStack() {}
+	MutantStack(const MutantStack<T>& src) { *this = src; }
+	MutantStack<T>& operator=(const MutantStack<T>& rhs)
+	{
+		this->c = rhs.c;
+		return *this;
+	}
+	~MutantStack() {}
+
+	typedef typename NS::stack<T>::container_type::iterator iterator;
+
+	iterator begin() { return this->c.begin(); }
+	iterator end() { return this->c.end(); }
+};
 
 // class Awesome {
 

@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 14:50:41 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/19 15:05:55 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/14 15:59:58 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ namespace ft {
 			Iterator	_value;
 
 		public:
-			vectorIterator(void) : _value(Iterator()) {}
+			vectorIterator(void) : _value() {}
 			explicit vectorIterator(const Iterator& value) : _value(value) {}
 			vectorIterator(vectorIterator &src) : _value(src.base()) {}
 			~vectorIterator(void) {}
@@ -50,7 +50,7 @@ namespace ft {
 			}
 			vectorIterator &operator++(void)
 			{
-				this->_value += 1;
+				++_value;
 				return *this;
 			}
 			vectorIterator operator++(int)
@@ -62,7 +62,7 @@ namespace ft {
 
 			vectorIterator &operator--(void)
 			{
-				this->_value -= 1;
+				--_value;
 				return *this;
 			}
 			vectorIterator operator--(int)
@@ -106,12 +106,12 @@ namespace ft {
 				return *this;
 			}
 
-			bool operator==(const vectorIterator& rhs) const	{ return (rhs._value == _value); }
-			bool operator!=(const vectorIterator& rhs) const	{ return (rhs._value != _value); }
-			bool operator<(const vectorIterator& rhs) const		{ return (rhs._value > this->_value); }
-			bool operator>(const vectorIterator& rhs) const		{ return (rhs._value < this->_value); }
-			bool operator<=(const vectorIterator& rhs) const	{ return (rhs._value >= this->_value); }
-			bool operator>=(const vectorIterator& rhs) const	{ return (rhs._value <= this->_value); }
+			// bool operator==(const vectorIterator& rhs) const	{ return (rhs._value == _value); }
+			// bool operator!=(const vectorIterator& rhs) const	{ return (rhs._value != _value); }
+			// bool operator<(const vectorIterator& rhs) const		{ return (rhs._value > this->_value); }
+			// bool operator>(const vectorIterator& rhs) const		{ return (rhs._value < this->_value); }
+			// bool operator<=(const vectorIterator& rhs) const	{ return (rhs._value >= this->_value); }
+			// bool operator>=(const vectorIterator& rhs) const	{ return (rhs._value <= this->_value); }
 	};
 
 	template <typename L, typename R>

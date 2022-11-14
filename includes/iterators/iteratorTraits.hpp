@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 14:47:51 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/21 16:13:15 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/14 16:04:37 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ namespace ft {
 			typedef  std::ptrdiff_t				difference_type;
 			typedef  T*							pointer;
 			typedef  T&							reference;
-			typedef  random_access_iterator_tag	iterator_category;
+			typedef  std::random_access_iterator_tag	iterator_category;
 	};
 
 	template <class T>
@@ -66,14 +66,9 @@ namespace ft {
 			typedef  std::ptrdiff_t				difference_type;
 			typedef  const T*					pointer;
 			typedef  const T&					reference;
-			typedef  random_access_iterator_tag	iterator_category;
+			typedef  std::random_access_iterator_tag	iterator_category;
 	};
 
-	// template<typename L, typename R>
-	// bool operator==(const vectorIterator<L> &left, const vectorIterator<R> &right)
-	// {
-	// 	return left.operator->() == right.operator->();
-	// }
 }
 
 #endif

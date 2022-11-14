@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 13:29:16 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/11/11 14:07:54 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/14 16:41:46 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ namespace ft {
 					this->first = other.first;
 					this->second = other.second;
 				}
-				// return make_pair(other.first, other.second);
-				// return res;
 				return (*this);
 			}
 

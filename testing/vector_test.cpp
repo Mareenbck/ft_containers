@@ -6,33 +6,41 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/15 14:36:54 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/10/18 16:57:17 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/14 19:06:49 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/containers/vector.hpp"
-#include <vector>
-#include <iterator>
-#include <iostream>
+#include "includes.hpp"
+#if NS //CREATE A REAL STL EXAMPLE
+	#include <map>
+	#include <stack>
+	#include <vector>
+	# define NS std
+#else
+	#include <../includes/containers/map.hpp>
+	#include <../includes/containers/stack.hpp>
+	#include <../includes/containers/vector.hpp>
+	# define NS ft
+#endif
 
 /********************************CONSTRUCTORS**********************************/
 
 void std_check_constructor (void)
 {
-	std::vector<int> vct(5);
-	std::vector<int>::iterator it = vct.begin(), ite = vct.end();
+	NS::vector<int> vct(5);
+	NS::vector<int>::iterator it = vct.begin(), ite = vct.end();
 
 	std::cout << "len: " << (ite - it) << std::endl;
 	for (; it != ite; ++it)
 		*it = (ite - it);
 
 	it = vct.begin();
-	std::vector<int> vct_range(it, --(--ite));
+	NS::vector<int> vct_range(it, --(--ite));
 	for (int i = 0; it != ite; ++it)
 		*it = ++i * 5;
 
 	it = vct.begin();
-	std::vector<int> vct_copy(vct);
+	NS::vector<int> vct_copy(vct);
 	for (int i = 0; it != ite; ++it)
 		*it = ++i * 7;
 	vct_copy.push_back(42);
@@ -40,21 +48,21 @@ void std_check_constructor (void)
 
 	std::cout << "\t-- PART ONE --" << std::endl;
 	std::cout << "The contents of VCT are:";
-	for (std::vector<int>::iterator it = vct.begin(); it != vct.end(); ++it)
+	for (NS::vector<int>::iterator it = vct.begin(); it != vct.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 	std::cout << " size " << vct.size() << std::endl;
 
 
 	std::cout << "The contents of vct_range are:";
-	for (std::vector<int>::iterator it = vct_range.begin(); it != vct_range.end(); ++it)
+	for (NS::vector<int>::iterator it = vct_range.begin(); it != vct_range.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 	std::cout << " size " << vct_range.size() << std::endl;
 
 
 	std::cout << "The contents of vct_copy are:";
-	for (std::vector<int>::iterator it = vct_copy.begin(); it != vct_copy.end(); ++it)
+	for (NS::vector<int>::iterator it = vct_copy.begin(); it != vct_copy.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 	std::cout << " size " << vct_copy.size() << std::endl;
@@ -66,21 +74,21 @@ void std_check_constructor (void)
 
 	std::cout << "\t-- PART TWO --" << std::endl;
 	std::cout << "The contents of VCT are:";
-	for (std::vector<int>::iterator it = vct.begin(); it != vct.end(); ++it)
+	for (NS::vector<int>::iterator it = vct.begin(); it != vct.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 	std::cout << " size " << vct.size() << std::endl;
 
 
 	std::cout << "The contents of vct_range are:";
-	for (std::vector<int>::iterator it = vct_range.begin(); it != vct_range.end(); ++it)
+	for (NS::vector<int>::iterator it = vct_range.begin(); it != vct_range.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 	std::cout << " size " << vct_range.size() << std::endl;
 
 
 	std::cout << "The contents of vct_copy are:";
-	for (std::vector<int>::iterator it = vct_copy.begin(); it != vct_copy.end(); ++it)
+	for (NS::vector<int>::iterator it = vct_copy.begin(); it != vct_copy.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 	std::cout << " size " << vct_copy.size() << std::endl;
@@ -88,20 +96,20 @@ void std_check_constructor (void)
 
 void ft_check_constructor_tester(void)
 {
-	ft::vector<int> vct(5);
-	ft::vector<int>::iterator it = vct.begin(), ite = vct.end();
+	NS::vector<int> vct(5);
+	NS::vector<int>::iterator it = vct.begin(), ite = vct.end();
 	std::cout << " ****************** FT ****************** " << std::endl;
 	std::cout << "len: " << (ite - it) << std::endl;
 	for (; it != ite; ++it)
 		*it = (ite - it);
 
 	it = vct.begin();
-	ft::vector<int> vct_range(it, --(--ite));
+	NS::vector<int> vct_range(it, --(--ite));
 	for (int i = 0; it != ite; ++it)
 		*it = ++i * 5;
 
 	it = vct.begin();
-	ft::vector<int> vct_copy(vct);
+	NS::vector<int> vct_copy(vct);
 	for (int i = 0; it != ite; ++it)
 		*it = ++i * 7;
 	vct_copy.push_back(42);
@@ -109,21 +117,21 @@ void ft_check_constructor_tester(void)
 
 	std::cout << "\t-- PART ONE --" << std::endl;
 	std::cout << "The contents of VCT are:";
-	for (ft::vector<int>::iterator it = vct.begin(); it != vct.end(); ++it)
+	for (NS::vector<int>::iterator it = vct.begin(); it != vct.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 	std::cout << " size " << vct.size() << std::endl;
 
 
 	std::cout << "The contents of vct_range are:";
-	for (ft::vector<int>::iterator it = vct_range.begin(); it != vct_range.end(); ++it)
+	for (NS::vector<int>::iterator it = vct_range.begin(); it != vct_range.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 	std::cout << " size " << vct_range.size() << std::endl;
 
 
 	std::cout << "The contents of vct_copy are:";
-	for (ft::vector<int>::iterator it = vct_copy.begin(); it != vct_copy.end(); ++it)
+	for (NS::vector<int>::iterator it = vct_copy.begin(); it != vct_copy.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 	std::cout << " size " << vct_copy.size() << std::endl;
@@ -136,21 +144,21 @@ void ft_check_constructor_tester(void)
 
 	std::cout << "\t-- PART TWO --" << std::endl;
 	std::cout << "The contents of VCT are:";
-	for (ft::vector<int>::iterator it = vct.begin(); it != vct.end(); ++it)
+	for (NS::vector<int>::iterator it = vct.begin(); it != vct.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 	std::cout << " size " << vct.size() << std::endl;
 
 
 	std::cout << "The contents of vct_range are:";
-	for (ft::vector<int>::iterator it = vct_range.begin(); it != vct_range.end(); ++it)
+	for (NS::vector<int>::iterator it = vct_range.begin(); it != vct_range.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 	std::cout << " size " << vct_range.size() << std::endl;
 
 
 	std::cout << "The contents of vct_copy are:";
-	for (ft::vector<int>::iterator it = vct_copy.begin(); it != vct_copy.end(); ++it)
+	for (NS::vector<int>::iterator it = vct_copy.begin(); it != vct_copy.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 	std::cout << " size " << vct_copy.size() << std::endl;
@@ -160,44 +168,44 @@ void ft_check_constructor_tester(void)
 void ft_check_constructor(void)
 {
   // constructors used in the same order as described above:
-	ft::vector<int> first;                                // empty vector of ints
-	ft::vector<int> second (4,100);                       // four ints with value 100
-	ft::vector<int> third (second.begin(),second.end());  // iterating through second
-	ft::vector<int> fourth (third);                       // a copy of third
+	NS::vector<int> first;                                // empty vector of ints
+	NS::vector<int> second (4,100);                       // four ints with value 100
+	NS::vector<int> third (second.begin(),second.end());  // iterating through second
+	NS::vector<int> fourth (third);                       // a copy of third
 
 	std::cout << "The contents of second are:";
-	for (ft::vector<int>::iterator it = second.begin(); it != second.end(); ++it)
+	for (NS::vector<int>::iterator it = second.begin(); it != second.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 
 	std::cout << "The contents of third are:";
-	for (ft::vector<int>::iterator it = third.begin(); it != third.end(); ++it)
+	for (NS::vector<int>::iterator it = third.begin(); it != third.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 
 	std::cout << "The contents of fourth are:";
-	for (ft::vector<int>::iterator it = fourth.begin(); it != fourth.end(); ++it)
+	for (NS::vector<int>::iterator it = fourth.begin(); it != fourth.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
   // the iterator constructor can also be used to construct from arrays:
 	int myints[] = {16,2,77,29};
-	ft::vector<int> fifth (myints, myints + sizeof(myints) / sizeof(int) );
+	NS::vector<int> fifth (myints, myints + sizeof(myints) / sizeof(int) );
 
 	std::cout << "The contents of fifth are:";
-	for (ft::vector<int>::iterator it = fifth.begin(); it != fifth.end(); ++it)
+	for (NS::vector<int>::iterator it = fifth.begin(); it != fifth.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 }
 
 int ft_check_assign(void)
 {
-	ft::vector<int> first;
-	ft::vector<int> second;
-	ft::vector<int> third;
+	NS::vector<int> first;
+	NS::vector<int> second;
+	NS::vector<int> third;
 
 	first.assign (7,100);             // 7 ints with a value of 100
 
-	ft::vector<int>::iterator it;
+	NS::vector<int>::iterator it;
 	it=first.begin()+1;
 
 	second.assign (it,first.end()-1); // the 5 central values of first
@@ -213,10 +221,10 @@ int ft_check_assign(void)
 
 int	ft_check_assign_bis(void)
 {
-	std::vector<int> vct(7);
-	std::vector<int> vct_two(4);
-	std::vector<int> vct_three;
-	std::vector<int> vct_four;
+	NS::vector<int> vct(7);
+	NS::vector<int> vct_two(4);
+	NS::vector<int> vct_three;
+	NS::vector<int> vct_four;
 
 	for (unsigned long int i = 0; i < vct.size(); ++i)
 		vct[i] = (vct.size() - i) * 3;
@@ -255,16 +263,16 @@ int	ft_check_assign_bis(void)
 void copy_swap_tests(void)
 {
 	std::cout << std::endl << "COPY && SWAP TESTS" << std::endl;
-	ft::vector<int> test;
+	NS::vector<int> test;
 	std::cout << "size : " << test.size() << " | capacity : " << test.capacity() << std::endl;
 
 	for (size_t i = 0; i < 50; i++) { test.push_back(i); }
 	std::cout << "size : " << test.size() << " | capacity : " << test.capacity() << std::endl;
 	std::cout << std::endl;
-	ft::vector<int> test_copy(test);
+	NS::vector<int> test_copy(test);
 	for (size_t i = 0; i < test_copy.size(); i++) { test_copy[i] += 100; }
 	std::cout << "size : " << test_copy.size() << " | capacity : " << test_copy.capacity() << std::endl;
-	ft::vector<int> test_range(test.begin() + 20, test.begin() + 30);
+	NS::vector<int> test_range(test.begin() + 20, test.begin() + 30);
 	std::cout << "size : " << test_range.size() << " | capacity : " << test_range.capacity() << std::endl;
 	test_copy.swap(test);
 	std::cout << "size : " << test.size() << " | capacity : " << test.capacity() << std::endl;
@@ -283,9 +291,9 @@ void copy_swap_tests(void)
 
 void ft_reserve(void)
 {
-	ft::vector<int>::size_type sz;
+	NS::vector<int>::size_type sz;
 
-	ft::vector<int> foo;
+	NS::vector<int> foo;
 	sz = foo.capacity();
 	std::cout << "making foo grow:\n";
 	for (int i = 0; i < 100; ++i)
@@ -298,7 +306,7 @@ void ft_reserve(void)
 		}
 	}
 
-	ft::vector<int> bar;
+	NS::vector<int> bar;
 	sz = bar.capacity();
 	bar.reserve(100); // this is the only difference with foo above
 	std::cout << "making bar grow:\n";
@@ -316,7 +324,7 @@ void ft_reserve(void)
 void ft_check_resize(void)
 {
 	std::cout << std::endl << "RESIZE TESTS" << std::endl;
-	ft::vector<int> test(12, 12);
+	NS::vector<int> test(12, 12);
 
 	std::cout << "s: " << test.size() << ", c: " << test.capacity() << std::endl;
 	test.resize(72);
@@ -332,7 +340,7 @@ void ft_check_resize(void)
 
 	std::cout << "------------------------------" << std::endl;
 
-	ft::vector<int> myvector;
+	NS::vector<int> myvector;
 	for (int i=1;i<10;i++)
 		myvector.push_back(i);
 
@@ -350,7 +358,7 @@ void ft_check_resize(void)
 
 void ft_check_pushback(void)
 {
-	ft::vector<int> myvector;
+	NS::vector<int> myvector;
 	// int myint;
 
 	// std::cout << "Please enter some integers (enter 0 to end):\n";
@@ -367,9 +375,9 @@ void ft_check_pushback(void)
 
 int	ft_check_pushback_bis(void)
 {
-	ft::vector<std::string> vct(8);
-	ft::vector<std::string> vct2;
-	ft::vector<std::string>::iterator it = vct.begin();
+	NS::vector<std::string> vct(8);
+	NS::vector<std::string> vct2;
+	NS::vector<std::string>::iterator it = vct.begin();
 
 	for (unsigned long int i = 0; i < vct.size(); ++i)
 		it[i] = std::string((vct.size() - i), i + 65);
@@ -395,7 +403,7 @@ int	ft_check_pushback_bis(void)
 void push_pop_back_tests(void)
 {
 	std::cout << std::endl << "PUSH BACK & POP BACK TESTS" << std::endl;
-	ft::vector<int> test;
+	NS::vector<int> test;
 
 	std::cout << "Empty ? " << test.empty() << " / Capacity : " << test.capacity() << " / Size : " << test.size() << std::endl;
 	for (size_t i = 0; i < 51; i++)
@@ -406,7 +414,7 @@ void push_pop_back_tests(void)
 			std::cout << std::endl;
 	}
 
-	for (ft::vector<int>::iterator it = test.begin(); it != test.end(); ++it)
+	for (NS::vector<int>::iterator it = test.begin(); it != test.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 	std::cout << " size " << test.size() << " | capacity : " << test.capacity() << std::endl;
@@ -414,7 +422,7 @@ void push_pop_back_tests(void)
 	test.pop_back();
 	test.pop_back();
 	test.pop_back();
-	for (ft::vector<int>::iterator it = test.begin(); it != test.end(); ++it)
+	for (NS::vector<int>::iterator it = test.begin(); it != test.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 	std::cout << " size " << test.size() << " | capacity : " << test.capacity() << std::endl;
@@ -422,9 +430,9 @@ void push_pop_back_tests(void)
 
 void ft_check_insert()
 {
-	ft::vector<int> myvector (3,100);
-	ft::vector<int>::iterator it;
-	ft::vector<int>::iterator ite = myvector.end();
+	NS::vector<int> myvector (3,100);
+	NS::vector<int>::iterator it;
+	NS::vector<int>::iterator ite = myvector.end();
 
 	it = myvector.begin();
 	for (; it != ite; it++)
@@ -446,7 +454,7 @@ void ft_check_insert()
   // "it" no longer valid, get a new one:
 	it = myvector.begin();
 
-	ft::vector<int> anothervector (2,400);
+	NS::vector<int> anothervector (2,400);
 	myvector.insert (it+2,anothervector.begin(),anothervector.end());
 	it = myvector.begin();
 	for (; it != myvector.end(); it++)
@@ -465,8 +473,8 @@ void ft_check_insert()
 void ft_check_insert_bis()
 {
 	std::cout << std::endl << "INSERT TESTS" << std::endl;
-	ft::vector<int> test(1, 1);
-	ft::vector<int> test2(5, 5);
+	NS::vector<int> test(1, 1);
+	NS::vector<int> test2(5, 5);
 
 	test.insert(test.begin(), 200, 12);
 	std::cout << "size : " << test.size() << "  |  capacity : " << test.capacity() << std::endl;
@@ -488,8 +496,8 @@ void ft_check_insert_bis()
 
 void ft_check_erase(void)
 {
-	ft::vector<int> second(5,100);
-	ft::vector<int>::iterator it1;
+	NS::vector<int> second(5,100);
+	NS::vector<int>::iterator it1;
 
 	second[0] = 1;
 	second[1] = 2;
@@ -512,8 +520,8 @@ void ft_check_erase(void)
 
 	std::cout << "______________________________________" << std::endl;
 
-	ft::vector<int> first(10,20);
-	ft::vector<int>::iterator it;
+	NS::vector<int> first(10,20);
+	NS::vector<int>::iterator it;
 
 	for (int i = 0; i < 10; i++)
 		first[i] = i + 1;
@@ -534,8 +542,8 @@ void ft_check_erase(void)
 
 	std::cout << "REALITY " << std::endl;
 
-	std::vector<int> real(10,20);
-	std::vector<int>::iterator itr;
+	NS::vector<int> real(10,20);
+	NS::vector<int>::iterator itr;
 
 	std::cout << "Vector : " << std::endl;
 	for (int i = 0; i < 10; i++)
@@ -551,12 +559,12 @@ void ft_check_erase(void)
 
 void ft_check_erase_bis(void)
 {
-	ft::vector<int> myvector;
+	NS::vector<int> myvector;
 
   // set some values (from 1 to 10)
 	for (int i=1; i<=10; i++) myvector.push_back(i);
 	std::cout << " my vector :";
-	for (ft::vector<int>::iterator it = myvector.begin(); it != myvector.end(); ++it)
+	for (NS::vector<int>::iterator it = myvector.begin(); it != myvector.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 	std::cout << " size " << myvector.size() << std::endl;
@@ -564,7 +572,7 @@ void ft_check_erase_bis(void)
   // erase the 6th element
 	myvector.erase(myvector.begin()+5);
 	std::cout << "erase the 6th element :";
-	for (ft::vector<int>::iterator it = myvector.begin(); it != myvector.end(); ++it)
+	for (NS::vector<int>::iterator it = myvector.begin(); it != myvector.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << '\n';
 	std::cout << " size " << myvector.size() << std::endl;
@@ -580,13 +588,13 @@ void ft_check_erase_bis(void)
 
 void std_check_erase_bis(void)
 {
-	std::vector<std::string> myvector(10);
+	NS::vector<std::string> myvector(10);
 
   // set some values (from 1 to 10)
 	for (unsigned long i = 0; i< myvector.size(); ++i)
 		myvector[i] = std::string((myvector.size() - i), i + 65);
 	std::cout << " my vector :";
-	for (std::vector<std::string>::iterator it = myvector.begin(); it != myvector.end(); ++it)
+	for (NS::vector<std::string>::iterator it = myvector.begin(); it != myvector.end(); ++it)
 		std::cout << " | " << *it;
 	std::cout << '\n';
 	std::cout << " size " << myvector.size() << std::endl;
@@ -594,35 +602,35 @@ void std_check_erase_bis(void)
   // erase the 6th element
 	myvector.erase(myvector.begin()+2);
 	std::cout << "erase the 2th element :";
-	for (std::vector<std::string>::iterator it = myvector.begin(); it != myvector.end(); ++it)
+	for (NS::vector<std::string>::iterator it = myvector.begin(); it != myvector.end(); ++it)
 		std::cout << " | " << *it;
 	std::cout << '\n';
 	std::cout << " size " << myvector.size() << std::endl;
 
 	myvector.erase(myvector.begin());
 	std::cout << "erase the 1rst element :";
-	for (std::vector<std::string>::iterator it = myvector.begin(); it != myvector.end(); ++it)
+	for (NS::vector<std::string>::iterator it = myvector.begin(); it != myvector.end(); ++it)
 		std::cout << " | " << *it;
 	std::cout << '\n';
 	std::cout << " size " << myvector.size() << std::endl;
 
 	myvector.erase(myvector.end() - 1);
 	std::cout << "erase the end -1 element :";
-	for (std::vector<std::string>::iterator it = myvector.begin(); it != myvector.end(); ++it)
+	for (NS::vector<std::string>::iterator it = myvector.begin(); it != myvector.end(); ++it)
 		std::cout << " | " << *it;
 	std::cout << '\n';
 	std::cout << " size " << myvector.size() << std::endl;
 
 	myvector.erase(myvector.begin(), myvector.begin() + 3);
 	std::cout << "erase the begin to begin + 3 element :";
-	for (std::vector<std::string>::iterator it = myvector.begin(); it != myvector.end(); ++it)
+	for (NS::vector<std::string>::iterator it = myvector.begin(); it != myvector.end(); ++it)
 		std::cout << " | " << *it;
 	std::cout << '\n';
 	std::cout << " size " << myvector.size() << std::endl;
 
 	myvector.erase(myvector.end() - 3, myvector.end() - 1);
 	std::cout << "erase the end -3 to end element :";
-	for (std::vector<std::string>::iterator it = myvector.begin(); it != myvector.end(); ++it)
+	for (NS::vector<std::string>::iterator it = myvector.begin(); it != myvector.end(); ++it)
 		std::cout << " | " << *it;
 	std::cout << '\n';
 	std::cout << " size " << myvector.size() << std::endl;
@@ -632,11 +640,11 @@ void std_check_erase_bis(void)
 
 void std_check_comparaison(void)
 {
-	std::vector<int> vct(4);
-	std::vector<int> vct2(4);
+	NS::vector<int> vct(4);
+	NS::vector<int> vct2(4);
 
-	ft::vector<int> ftvct(4);
-	ft::vector<int> ftvct2(4);
+	NS::vector<int> ftvct(4);
+	NS::vector<int> ftvct2(4);
 
 	// cmp(vct, vct);  // 0
 	std::cout << "************   STD  ************" << std::endl;
@@ -665,10 +673,10 @@ void std_check_comparaison(void)
 void vector_tests(void)
 {
 	/**CONSTRUCTORS**/
-		// ft_check_constructor();
+		ft_check_constructor();
 		// ft_check_constructor_tester();
 		// std_check_constructor();
-		// ft_check_assign();
+		ft_check_assign();
 		// copy_swap_tests();
 		ft_check_assign_bis();
 
