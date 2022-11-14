@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 11:38:55 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/11/11 17:01:42 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/14 13:29:38 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -548,8 +548,6 @@ namespace ft {
 				new_node->parent = old_node->parent;
 		}
 
-
-
 		void	erase(pointer_node node)
 		{
 			pointer_node x = NULL;
@@ -704,6 +702,7 @@ namespace ft {
 					return NULL;
 				return p->parent;
 			}
+
 			pointer_node get_bro(pointer_node n)
 			{
 				pointer_node p = n->parent;
@@ -714,6 +713,7 @@ namespace ft {
 				else
 					return p->left;
 			}
+
 			pointer_node get_uncle(pointer_node n)
 			{
 				pointer_node p = n->parent;

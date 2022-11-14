@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 14:47:39 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/11/11 16:55:15 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/14 11:45:14 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,13 @@ class vector
 				_alloc.construct(&_arr[i], x._arr[i]);
 		}
 
+		~vector()
+		{
+			for (size_type i = 0; i < size(); i++)
+				_alloc.destroy(&_arr[i]);
+			_alloc.deallocate(_arr, capacity());
+		}
+
 		vector& operator=(const vector& x)
 		{
 			if (this != &x)
@@ -101,13 +108,6 @@ class vector
 				assign(x.begin(), x.end());
 			}
 			return *this;
-		}
-
-		~vector()
-		{
-			for (size_type i = 0; i < size(); i++)
-				_alloc.destroy(&_arr[i]);
-			_alloc.deallocate(_arr, capacity());
 		}
 
 		template <class InputIterator>
@@ -140,61 +140,29 @@ class vector
 			insert(begin(), n, u);
 		}
 
-		allocator_type get_allocator() const
-		{
-			return this->_alloc;
-		}
+		allocator_type get_allocator() const { return this->_alloc; }
 
 /***************************************ITERATOR****************************************/
 
-		iterator begin(void)
-		{
-			return iterator(_arr);
-		}
+		iterator begin(void) { return iterator(_arr); }
+		iterator end(void) { return iterator(_arr + _size); }
 
-		iterator end(void)
-		{
-			return iterator(_arr + _size);
-		}
+		const_iterator begin(void) const { return const_iterator(_arr); }
+		const_iterator end(void) const { return const_iterator(_arr + _size); }
 
-		const_iterator begin(void) const
-		{
-			return const_iterator(_arr);
-		}
+		reverse_iterator rbegin(void) { return reverse_iterator(end()); }
+		reverse_iterator rend(void) { return reverse_iterator(begin()); }
 
-		const_iterator end(void) const
-		{
-			return const_iterator(_arr + _size);
-		}
-
-		reverse_iterator rbegin(void)
-		{
-			return reverse_iterator(end());
-		}
-		reverse_iterator rend(void)
-		{
-			return reverse_iterator(begin());
-		}
-		const_reverse_iterator rbegin() const
-		{
-			return const_reverse_iterator(end());
-		}
-		const_reverse_iterator rend() const
-		{
-			return const_reverse_iterator(begin());
-		}
+		const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
+		const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
 
 /***************************************CAPACITY****************************************/
 
-		size_type size() const
-		{
-			return this->_size;
-		}
+		size_type size() const { return this->_size; }
 
-		size_type max_size() const
-		{
-			return this->_alloc.max_size();
-		}
+		size_type max_size() const { return this->_alloc.max_size(); }
+
+		size_type capacity() const { return this->_capacity; }
 
 		void resize(size_type n, value_type val = value_type())
 		{
@@ -203,11 +171,6 @@ class vector
 			else if (n < size())
 				erase(begin()+n, end());
 			_size = n;
-		}
-
-		size_type capacity() const
-		{
-			return this->_capacity;
 		}
 
 		bool empty() const
@@ -350,14 +313,14 @@ class vector
 		}
 
 		template <class InputIterator>
-			void insert(iterator position, InputIterator first, InputIterator last,  typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
+		void insert(iterator position, InputIterator first, InputIterator last,  typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
+		{
+			for (InputIterator it = first; it != last; it++)
 			{
-				for (InputIterator it = first; it != last; it++)
-				{
-					position = insert(position, *it);
-					position++;
-				}
+				position = insert(position, *it);
+				position++;
 			}
+		}
 
 		iterator erase(iterator position)
 		{
@@ -407,45 +370,31 @@ class vector
 
 /***************************************ELEMENT ACCESS****************************************/
 
-		reference operator[](size_type n)
-		{
-			return this->_arr[n];
-		}
+		reference operator[](size_type n) { return this->_arr[n]; }
+		const_reference operator[](size_type n) const { return this->_arr[n]; }
 
-		const_reference operator[](size_type n) const
-		{
-			return this->_arr[n];
-		}
 		const_reference at(size_type n) const
 		{
 			if (n >= _size)
 				throw std::out_of_range("vector : out_of_range");
 			return this->_arr[n];
 		}
+
 		reference at(size_type n)
 		{
 			if (n >= _size)
 				throw std::out_of_range("vector : out_of_range");
 			return this->_arr[n];
 		}
-		reference front()
-		{
-			return this->_arr[0];
-		}
-		const_reference front() const
-		{
-			return this->_arr[0];
-		}
-		reference back()
-		{
-			return this->_arr[_size - 1];
-		}
-		const_reference back() const
-		{
-			return this->_arr[_size - 1];
-		}
 
+		reference front() { return this->_arr[0]; }
+		const_reference front() const { return this->_arr[0]; }
+
+		reference back() { return this->_arr[_size - 1]; }
+		const_reference back() const { return this->_arr[_size - 1]; }
 };
+
+/***************************************NON MEMBER****************************************/
 
 	template <class T, class Allocator>
 		bool operator==(const vector<T,Allocator>& x, const vector<T,Allocator>& y) {
