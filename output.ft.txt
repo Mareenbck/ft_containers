@@ -1,0 +1,179 @@
+[1m[96m****************************************
+*                                      *
+*            VECTOR TESTS              *
+*                                      *
+****************************************[0m
+
+[91m[1m------------- CONSTRUCTORS -------------[0m
+
+[95m[7m▶️​​  CONSTRUCTORS TESTS [0m
+
+ [0;33;2m[1m | [4mdefault:[0m vector();
+     
+     [1msize :[0m0  |  [1mcapacity :[0m0
+
+ [0;33;2m[1m | [4mwith size:[0m vector(5);
+     vct[0] : 0 | vct[1] : 0 | vct[2] : 0 | vct[3] : 0 | vct[4] : 0 | 
+     [1msize :[0m5  |  [1mcapacity :[0m5
+
+ [0;33;2m[1m | [4mwith size + value:[0m vector(5, 42);
+     vct[0] : 42 | vct[1] : 42 | vct[2] : 42 | vct[3] : 42 | vct[4] : 42 | 
+     [1msize :[0m5  |  [1mcapacity :[0m5
+
+ [0;33;2m[1m | [4mwith iterator:[0m vector(vec.begin(), vec.end());
+     vct[0] : 42 | vct[1] : 42 | vct[2] : 42 | vct[3] : 42 | vct[4] : 42 | 
+     [1msize :[0m5  |  [1mcapacity :[0m5
+
+ [0;33;2m[1m | [4mwith range:[0m vct_range(it, --(--ite));
+     vct[0] : 42 | vct[1] : 42 | vct[2] : 42 | 
+     [1msize :[0m3  |  [1mcapacity :[0m3
+
+ [0;33;2m[1m | [4mcopy:[0m vct_copy(vct);
+     vct[0] : 42 | vct[1] : 42 | vct[2] : 42 | vct[3] : 42 | vct[4] : 42 | 
+     [1msize :[0m5  |  [1mcapacity :[0m5
+
+ [0;33;2m[1m | [4moperator = [0m vct_range = vec;
+     vct[0] : 42 | vct[1] : 42 | vct[2] : 42 | vct[3] : 42 | vct[4] : 42 | 
+     [1msize :[0m5  |  [1mcapacity :[0m5
+
+[95m[7m▶️​  ASSIGN TESTS [0m
+ [0;33;2m[1m | [4massign:[0m vct(4, / Ola !/);
+     vct[0] : Ola ! | vct[1] : Ola ! | vct[2] : Ola ! | vct[3] : Ola ! | 
+     [1msize :[0m4  |  [1mcapacity :[0m4
+
+ [0;33;2m[1m | [4massign w/ iterator:[0m vec1.assign(lst.begin(), lst.end());
+     vct[0] : 0 | vct[1] : 3 | vct[2] : 6 | vct[3] : 9 | vct[4] : 12 | vct[5] : 15 | vct[6] : 18 | vct[7] : 21 | vct[8] : 24 | vct[9] : 27 | 
+     [1msize :[0m10  |  [1mcapacity :[0m10
+
+[91m[1m------------- CAPACITY -------------[0m
+
+[95m[7m▶️​​  CAPACITY TESTS [0m
+ [0;33;2m[1m | [4msize empty:[0m vector()
+   size : 0 | capacity : 0 | max_size : 2305843009213693951
+
+ [0;33;2m[1m | [4msize 10000:[0m vct1(10000)
+   size : 10000 | capacity : 10000 | max_size : 2305843009213693951
+
+ [0;33;2m[1m | [4msize 1:[0m vct2(1)
+   size : 1 | capacity : 1 | max_size : 2305843009213693951
+
+[95m[7m​▶️​​  RESIZE TESTS [0m
+ [0;33;2m[1m | [4mresize():[0m vct1.resize(5, 42)
+     vct[0] : 0 | vct[1] : 0 | vct[2] : 0 | vct[3] : 0 | vct[4] : 0 | 
+     [1msize :[0m5  |  [1mcapacity :[0m10000
+
+ [0;33;2m[1m | [4mresize():[0m vct.resize(42)
+     vct[0] : 0 | vct[1] : 0 | vct[2] : 0 | vct[3] : 0 | vct[4] : 0 | vct[5] : 0 | vct[6] : 0 | vct[7] : 0 | vct[8] : 0 | vct[9] : 0 | vct[10] : 0 | vct[11] : 0 | vct[12] : 0 | vct[13] : 0 | vct[14] : 0 | vct[15] : 0 | vct[16] : 0 | vct[17] : 0 | vct[18] : 0 | vct[19] : 0 | vct[20] : 0 | vct[21] : 0 | vct[22] : 0 | vct[23] : 0 | vct[24] : 0 | vct[25] : 0 | vct[26] : 0 | vct[27] : 0 | vct[28] : 0 | vct[29] : 0 | vct[30] : 0 | vct[31] : 0 | vct[32] : 0 | vct[33] : 0 | vct[34] : 0 | vct[35] : 0 | vct[36] : 0 | vct[37] : 0 | vct[38] : 0 | vct[39] : 0 | vct[40] : 0 | vct[41] : 0 | 
+     [1msize :[0m42  |  [1mcapacity :[0m42
+
+ [0;33;2m[1m | [4mresize():[0m vct2.resize(0)
+     
+     [1msize :[0m0  |  [1mcapacity :[0m1
+
+[95m[7m▶️​​  EMPTY TESTS [0m
+ [0;33;2m[1m | [4mvct:[0m 42
+   bool :0
+ [0;33;2m[1m | [4mvct1:[0m 5
+   bool :0
+ [0;33;2m[1m | [4mvct2:[0m 0
+   bool :1
+
+[95m[7m▶️​​  RESERVE TESTS [0m
+ [0;33;2m[1m | [4mreserve:[0m vct.reserve(10)
+     vct[0] : 0 | vct[1] : 0 | vct[2] : 0 | vct[3] : 0 | vct[4] : 0 | vct[5] : 0 | vct[6] : 0 | vct[7] : 0 | vct[8] : 0 | vct[9] : 0 | vct[10] : 0 | vct[11] : 0 | vct[12] : 0 | vct[13] : 0 | vct[14] : 0 | vct[15] : 0 | vct[16] : 0 | vct[17] : 0 | vct[18] : 0 | vct[19] : 0 | vct[20] : 0 | vct[21] : 0 | vct[22] : 0 | vct[23] : 0 | vct[24] : 0 | vct[25] : 0 | vct[26] : 0 | vct[27] : 0 | vct[28] : 0 | vct[29] : 0 | vct[30] : 0 | vct[31] : 0 | vct[32] : 0 | vct[33] : 0 | vct[34] : 0 | vct[35] : 0 | vct[36] : 0 | vct[37] : 0 | vct[38] : 0 | vct[39] : 0 | vct[40] : 0 | vct[41] : 0 | 
+     [1msize :[0m42  |  [1mcapacity :[0m42
+
+ [0;33;2m[1m | [4mreserve:[0m vct1.reserve(100)
+     vct[0] : 0 | vct[1] : 0 | vct[2] : 0 | vct[3] : 0 | vct[4] : 0 | 
+     [1msize :[0m5  |  [1mcapacity :[0m10000
+
+ [0;33;2m[1m | [4mreserve:[0m vct2.reserve(0)
+     
+     [1msize :[0m0  |  [1mcapacity :[0m100
+
+[91m[1m------------- MODIFIERS -------------[0m
+
+[95m[7m▶️​  PUSH_BACK TESTS [0m
+[0;33;2m[1m  | [4mpush_back:[0m vct.push_back(42)
+     vct[0] : 42 | 
+     [1msize :[0m1  |  [1mcapacity :[0m1
+
+[0;33;2m[1m  | [4mpush_back in loop:[0m vct.push_back(54)
+     vct[0] : 42 | vct[1] : 54 | vct[2] : 54 | vct[3] : 54 | 
+     [1msize :[0m4  |  [1mcapacity :[0m4
+
+[95m[7m▶️​  POP_BACK TESTS [0m
+[0;33;2m[1m  | [4mpop_bakc[0m vct.pop_back()
+     vct[0] : 42 | vct[1] : 54 | vct[2] : 54 | 
+     [1msize :[0m3  |  [1mcapacity :[0m4
+
+[0;33;2m[1m  | [4mpop_bakc in loop:[0m vct.pop_back()
+     
+     [1msize :[0m0  |  [1mcapacity :[0m4
+
+[95m[7m▶️​  INSERT TESTS [0m
+     vct[0] : 5 | vct[1] : 5 | vct[2] : 5 | vct[3] : 5 | vct[4] : 5 | 
+     [1msize :[0m5  |  [1mcapacity :[0m5
+
+[0;33;2m[1m  | [4minsert(pos, value):[0m vct.insert(vct.end(), i * 7)
+     vct[0] : 5 | vct[1] : 5 | vct[2] : 5 | vct[3] : 5 | vct[4] : 5 | vct[5] : 0 | vct[6] : 7 | vct[7] : 14 | vct[8] : 21 | 
+     [1msize :[0m9  |  [1mcapacity :[0m9
+
+[0;33;2m[1m  | [4minsert(pos, times, value):[0m vct.insert(vct.end() - 2, 3, 42)
+     vct[0] : 5 | vct[1] : 5 | vct[2] : 5 | vct[3] : 5 | vct[4] : 5 | vct[5] : 0 | vct[6] : 7 | vct[7] : 42 | vct[8] : 42 | vct[9] : 42 | vct[10] : 14 | vct[11] : 21 | 
+     [1msize :[0m12  |  [1mcapacity :[0m18
+
+[0;33;2m[1m  | [4minsert(pos, iterator, iterator):[0m vct.insert(vct.end(), i * 7)
+     vct[0] : 5 | vct[1] : 5 | vct[2] : 5 | vct[3] : 400 | vct[4] : 400 | vct[5] : 5 | vct[6] : 5 | vct[7] : 0 | vct[8] : 7 | vct[9] : 42 | vct[10] : 42 | vct[11] : 42 | vct[12] : 14 | vct[13] : 21 | 
+     [1msize :[0m14  |  [1mcapacity :[0m18
+
+[95m[7m▶️​  ERASE TESTS [0m
+     vct[0] : 5 | vct[1] : 5 | vct[2] : 5 | vct[3] : 5 | vct[4] : 5 | vct[5] : 5 | vct[6] : 5 | vct[7] : 5 | vct[8] : 5 | vct[9] : 5 | 
+     [1msize :[0m10  |  [1mcapacity :[0m10
+
+[0;33;2m[1m  | [4merase(pos):[0m vct.erase(vct.begin())
+     vct[0] : 5 | vct[1] : 5 | vct[2] : 5 | vct[3] : 5 | vct[4] : 5 | vct[5] : 5 | vct[6] : 5 | vct[7] : 5 | vct[8] : 5 | 
+     [1msize :[0m9  |  [1mcapacity :[0m10
+
+[0;33;2m[1m  | [4merase(pos) in loop:[0m vct.erase(vct.begin())
+     vct[0] : 5 | vct[1] : 5 | vct[2] : 5 | vct[3] : 5 | vct[4] : 5 | 
+     [1msize :[0m5  |  [1mcapacity :[0m10
+
+[0;33;2m[1m  | [4merase(pos, pos):[0m vct.erase(3)
+     vct[0] : 5 | vct[1] : 5 | vct[2] : 5 | vct[3] : 5 | 
+     [1msize :[0m4  |  [1mcapacity :[0m10
+
+[95m[7m▶️​  SWAP TESTS [0m
+vct :     vct[0] : 5 | vct[1] : 5 | vct[2] : 5 | vct[3] : 5 | vct[4] : 5 | vct[5] : 5 | vct[6] : 5 | vct[7] : 5 | vct[8] : 5 | vct[9] : 5 | 
+     [1msize :[0m10  |  [1mcapacity :[0m10
+
+vct2 :     vct[0] : 42 | vct[1] : 42 | vct[2] : 42 | 
+     [1msize :[0m3  |  [1mcapacity :[0m3
+
+[0;33;2m[1m  | [4mswap:[0m vct.swap(vct2)
+     vct[0] : 42 | vct[1] : 42 | vct[2] : 42 | 
+     [1msize :[0m3  |  [1mcapacity :[0m3
+
+[95m[7m▶️​  CLEAR TESTS [0m
+vct :     vct[0] : 5 | vct[1] : 5 | vct[2] : 5 | vct[3] : 5 | vct[4] : 5 | vct[5] : 5 | vct[6] : 5 | vct[7] : 5 | vct[8] : 5 | vct[9] : 5 | 
+     [1msize :[0m10  |  [1mcapacity :[0m10
+
+[0;33;2m[1m  | [4mclear:[0m vct.clear()
+     
+     [1msize :[0m0  |  [1mcapacity :[0m10
+
+[95m[7m▶️​  COMPARAISON TESTS [0m
+eq: 1 | ne: 0
+lt: 0 | le: 1
+gt: 0 | ge: 1
+eq: 1 | ne: 0
+lt: 0 | le: 1
+gt: 0 | ge: 1
+[95m[7m▶️​  FRONT TESTS [0m
+vct :     vct[0] : 18 | vct[1] : 16 | vct[2] : 14 | vct[3] : 12 | vct[4] : 10 | vct[5] : 8 | vct[6] : 6 | vct[7] : 4 | vct[8] : 2 | 
+     [1msize :[0m9  |  [1mcapacity :[0m9
+
+[0;33;2m[1m  | [4mfront:[0m vct.front()
+18
+[0;33;2m[1m  | [4mback:[0m vct.back()
+2

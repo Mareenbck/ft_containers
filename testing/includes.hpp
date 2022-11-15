@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 10:02:29 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/11/15 12:14:22 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/15 17:26:30 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,17 @@ public:
 #define BOLD "\033[1m"
 #define RESET "\033[0m"
 #define UL "\033[4m"
+#define ULL "\033[7m"
 #define TAB "\t"
 // #define SPACE "  "
 #define YELLOW "\033[93m"
 #define RED "\033[91m"
+#define REDARK "\033[0;31;2m"
 #define BLUE "\033[96m"
+#define BLUEDARK "\033[0;34;2m"
 #define GREEN "\033[92m"
+#define GREENDARK "\033[0;32;2m"
+#define YELLDARK "\033[0;33;2m"
 #define PINK "\033[95m"
 #define STAR "\033[92m * \033[0m"
 
