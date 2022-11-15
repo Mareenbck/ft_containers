@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 14:47:39 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/11/15 10:45:27 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/15 17:19:55 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,8 +224,11 @@ class vector
 
 		void pop_back(void)
 		{
-			_alloc.destroy(&back());
-			_size--;
+			// if (size() > 0)
+			// {
+				_alloc.destroy(&back());
+				_size--;
+			// }
 		}
 
 		iterator insert(iterator position, const T& x)
@@ -235,7 +238,7 @@ class vector
 			{
 				size_type i = 0;
 				size_type newSize = _size + 1;
-				pointer newArr = _alloc.allocate(size() + 1);
+				pointer newArr = _alloc.allocate(capacity() * 2);
 				for (; i < pos; i++)
 					_alloc.construct(&newArr[i], _arr[i]);
 				_alloc.construct(&newArr[pos], x);
@@ -246,7 +249,7 @@ class vector
 				_alloc.deallocate(_arr, capacity());
 				_arr = newArr;
 				_size = newSize;
-				_capacity = newSize;
+				_capacity = capacity() * 2;
 				return (pos + begin());
 			}
 			if (!empty())
@@ -315,6 +318,18 @@ class vector
 		template <class InputIterator>
 		void insert(iterator position, InputIterator first, InputIterator last,  typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = 0)
 		{
+			// size_type i = last - first;
+			// if (i + size() >= _capacity)
+			// {
+			// 	size_type newCap = _size + i;
+			// 	if (newCap <= (2 * _capacity))
+			// 	{
+			// 		newCap = 2 * _size;
+			// 		if (newCap < size() + i)
+			// 			newCap = size() + i;
+			// 	}
+			// 	_capacity = newCap;
+			// }
 			for (InputIterator it = first; it != last; it++)
 			{
 				position = insert(position, *it);
