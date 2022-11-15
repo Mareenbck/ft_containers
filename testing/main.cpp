@@ -6,23 +6,11 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 17:54:19 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/11/14 19:05:00 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/15 10:32:19 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes.hpp"
-
-#if NS //CREATE A REAL STL EXAMPLE
-	#include <map>
-	#include <stack>
-	#include <vector>
-	# define NS std
-#else
-	#include <../includes/containers/map.hpp>
-	#include <../includes/containers/stack.hpp>
-	#include <../includes/containers/vector.hpp>
-	# define NS ft
-#endif
 
 int main(int argc, char **argv)
 {

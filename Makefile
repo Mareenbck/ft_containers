@@ -6,31 +6,30 @@ CXXFLAGS	=	-Wall -Wextra -Werror -std=c++98 -g3
 
 SRCDIR	= 	testing/
 SRCS	=	pair_test.cpp vector_test.cpp map_test.cpp main.cpp
-OBJS	=	$(addprefix $(OBJDIR), ${SRCS:.cpp=.o})
+
+OBJDIR_FT	= 	objs_ft/
+OBJDIR_STD	= 	objs_std/
+OBJS_FT		=	$(addprefix $(OBJDIR_FT), ${SRCS:.cpp=.o})
+OBJS_STD	=	$(addprefix $(OBJDIR_STD), ${SRCS:.cpp=.o})
+
 DEPENDS = 	$(OBJS:.o=.d)
 HEADER 	=	includes
-OBJDIR	= 	objs/
-NS = 0
 
 all:		${NAME_ft} $(NAME_std)
 
-# ./objs/ft_containers.o:	$(SRCDIR)%.cpp
-# 	@mkdir -p $(OBJDIR)
-# 	${CXX} ${CXXFLAGS} -I${HEADER} -MMD -MP -c $< -D NS=0 -o $@
+$(OBJDIR_STD)%.o:	$(SRCDIR)%.cpp
+	@mkdir -p $(OBJDIR_STD)
+	${CXX} ${CXXFLAGS} -I${HEADER} -MMD -MP -DNS=std -c $< -o $@
 
-$(OBJDIR)%.o:	$(SRCDIR)%.cpp
-	@mkdir -p $(OBJDIR)
-	${CXX} ${CXXFLAGS} -I${HEADER} -MMD -MP -o $@ -c $< -D NS=1
+$(OBJDIR_FT)%.o:	$(SRCDIR)%.cpp
+	@mkdir -p $(OBJDIR_FT)
+	${CXX} ${CXXFLAGS} -I${HEADER} -MMD -MP -o $@ -c $<
 
-$(OBJDIR)%.o:	$(SRCDIR)%.cpp
-	@mkdir -p $(OBJDIR)
-	${CXX} ${CXXFLAGS} -I${HEADER} -MMD -MP -c $< -o $@
+${NAME_ft}:	${OBJS_FT}
+	${CXX} ${CXXFLAGS} ${OBJS_FT} -o ${NAME_ft}
 
-${NAME_ft}:	${OBJS}
-	${CXX} ${CXXFLAGS} ${OBJS} -D NS=0 -o ${NAME_ft}
-
-${NAME_std}: ${OBJS}
-	${CXX} ${CXXFLAGS} ${OBJS} -D NS=1 -o ${NAME_std}
+${NAME_std}: ${OBJS_STD}
+	${CXX} ${CXXFLAGS} -DNS=std ${OBJS_STD} -o ${NAME_std}
 
 -include $(DEPENDS)
 
@@ -38,15 +37,16 @@ diff:
 	./ft_containers vector > output.ft.txt
 	./std_containers vector > output.std.txt
 	-diff output.ft.txt output.std.txt --color --report-identical-files
-	# rm -rf output.ft.txt output.std.txt
-	# $(MAKE) --quiet fclean
 
 clean:
-	rm -rf ${OBJDIR}
+	rm -rf ${OBJDIR_FT}
+	rm -rf ${OBJDIR_STD}
+	rm -rf output.ft.txt output.std.txt
 
 fclean: clean
 	rm -f ${NAME_ft}
 	rm -f ${NAME_std}
+
 
 re : fclean all
 

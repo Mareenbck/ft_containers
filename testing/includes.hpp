@@ -6,7 +6,7 @@
 /*   By: mbascuna <mbascuna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 10:02:29 by mbascuna          #+#    #+#             */
-/*   Updated: 2022/11/14 19:16:13 by mbascuna         ###   ########.fr       */
+/*   Updated: 2022/11/15 12:14:22 by mbascuna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,17 @@
 #include <iostream>
 #include <string>
 #include <deque>
-#if NS //CREATE A REAL STL EXAMPLE
-	#include <map>
-	#include <stack>
-	#include <vector>
-	# define NS std
-#else
-	#include <../includes/containers/map.hpp>
-	#include <../includes/containers/stack.hpp>
-	#include <../includes/containers/vector.hpp>
-	# define NS ft
+
+#ifndef NS
+#define NS ft
 #endif
+
+#include <map>
+#include <stack>
+#include <vector>
+#include <../includes/containers/map.hpp>
+#include <../includes/containers/stack.hpp>
+#include <../includes/containers/vector.hpp>
 
 #include <stdlib.h>
 
@@ -60,6 +60,18 @@ public:
 	iterator end() { return this->c.end(); }
 };
 
+#define BOLD "\033[1m"
+#define RESET "\033[0m"
+#define UL "\033[4m"
+#define TAB "\t"
+// #define SPACE "  "
+#define YELLOW "\033[93m"
+#define RED "\033[91m"
+#define BLUE "\033[96m"
+#define GREEN "\033[92m"
+#define PINK "\033[95m"
+#define STAR "\033[92m * \033[0m"
+
 // class Awesome {
 
 // 	public:
@@ -89,6 +101,6 @@ void	vector_tests(void);
 void 	pair_tests(void);
 void 	map_tests(void);
 // void	stack_tests(void);
-// void	map_tests(void);
+
 
 #endif
